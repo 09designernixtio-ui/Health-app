@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Vela Health</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --teal: #1D9E75; --teal-light: #E1F5EE; --teal-dark: #0F6E56;
+  --amber: #BA7517; --amber-light: #FAEEDA;
+  --red: #E24B4A; --red-light: #FCEBEB;
+  --blue: #378ADD; --blue-light: #E6F1FB;
+  --purple: #7F77DD; --purple-light: #EEEDFE;
+  --bg: #F2F1EC; --surface: #FFFFFF; --surface2: #F1EFE9;
+  --text: #1A1A18; --text2: #6B6B66; --text3: #A8A8A2;
+  --border: #E0DDD3;
+  --radius: 18px; --radius-sm: 12px;
+}
+html, body {
+  height: 100%; background: #111;
+  display: flex; align-items: center; justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+}
+.phone {
+  width: 393px; height: 852px; background: var(--bg);
+  border-radius: 52px; overflow: hidden; position: relative;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 0 0 2px rgba(0,0,0,0.8), 0 40px 80px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.12);
+  display: flex; flex-direction: column;
+}
+.notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 36px; background: #111; border-radius: 0 0 22px 22px; z-index: 50; }
+.status-bar { flex-shrink: 0; height: 56px; padding: 16px 28px 0; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 5; }
+.status-time { font-size: 15px; font-weight: 600; color: var(--text); }
+.status-right { display: flex; align-items: center; gap: 5px; }
+.status-right svg { width: 17px; height: 17px; }
+
+/* App pages (Home vs Log flow) */
+.page { display: none; flex: 1; flex-direction: column; overflow: hidden; position: relative; }
+.page.active { display: flex; }
+
+/* ─────────── HOME ─────────── */
+.screen { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 100px; }
+.screen::-webkit-scrollbar { display: none; }
+.header { padding: 12px 22px 10px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; background: var(--bg); }
+.greeting { font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+.greeting-date { font-size: 13px; color: var(--text3); margin-top: 2px; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--teal), var(--teal-dark)); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: white; }
+.slabel { font-size: 11px; font-weight: 700; color: #2A2A26; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1; padding: 10px 22px 4px; display: flex; align-items: center; justify-content: space-between; }
+.slabel a { color: var(--teal); text-transform: none; letter-spacing: 0; font-size: 12px; font-weight: 600; text-decoration: none; }
+
+.metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 22px; margin-bottom: 2px; }
+.metric-card { background: var(--surface); border-radius: var(--radius-sm); border: 1px solid var(--border); padding: 10px 11px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.metric-head { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.m-ico { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.m-ico svg { width: 11px; height: 11px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.m-ico-teal { background: var(--teal-light); } .m-ico-teal svg { stroke: var(--teal-dark); }
+.m-ico-amber { background: var(--amber-light); } .m-ico-amber svg { stroke: var(--amber); }
+.m-ico-soft { background: var(--surface2); } .m-ico-soft svg { stroke: var(--text2); }
+.metric-label { font-size: 11px; font-weight: 600; color: var(--text2); }
+.metric-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 4px; }
+.metric-value { font-size: 18px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; line-height: 1; }
+.metric-value small { font-size: 10px; color: var(--text3); font-weight: 600; }
+.metric-sub { font-size: 10px; color: var(--text3); line-height: 1.2; text-align: right; flex-shrink: 0; max-width: 52%; }
+.metric-sub.up { color: var(--teal); } .metric-sub.down { color: var(--amber); }
+
+.labs-wrap { padding: 0 22px; margin-bottom: 2px; transition: opacity 0.35s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease; overflow: hidden; max-height: 600px; opacity: 1; }
+.labs-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.lab-row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
+.lab-row:active { background: var(--surface2); }
+.lab-status-bar { width: 4px; height: 36px; border-radius: 4px; flex-shrink: 0; }
+.sb-high { background: var(--amber); } .sb-low { background: var(--red); } .sb-normal { background: var(--teal); }
+.lab-info { flex: 1; min-width: 0; }
+.lab-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.lab-range { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.lab-right { text-align: right; flex-shrink: 0; }
+.lab-value { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.lab-value.high { color: var(--amber); } .lab-value.low { color: var(--red); }
+.lab-trend { font-size: 11px; font-weight: 500; margin-top: 1px; }
+.lab-trend.t-up { color: var(--red); } .lab-trend.t-down { color: var(--amber); } .lab-trend.t-good { color: var(--teal); }
+.labs-footer { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; background: var(--surface2); font-size: 12px; color: var(--text2); }
+.labs-footer strong { color: var(--text); font-weight: 600; }
+.labs-footer .src { font-size: 11px; color: var(--text3); }
+
+.meds-wrap { padding: 0 22px; margin-bottom: 2px; }
+.meds-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.meds-progress { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.meds-progress-text { flex: 1; }
+.meds-progress-text strong { font-size: 14px; font-weight: 700; color: var(--text); display: block; }
+.meds-progress-text span { font-size: 12px; color: var(--text3); }
+.med-item { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
+.med-item:last-child { border-bottom: none; }
+.med-item:active { background: var(--surface2); }
+.med-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.18s; }
+.med-check.done { background: var(--teal); border-color: var(--teal); }
+.med-check svg { display: none; width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.med-check.done svg { display: block; }
+.med-info { flex: 1; }
+.med-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.med-name.taken { color: var(--text3); text-decoration: line-through; }
+.med-time { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.med-dose { font-size: 12px; font-weight: 500; color: var(--text2); background: var(--surface2); padding: 3px 8px; border-radius: 6px; }
+
+.prep-wrap { padding: 0 22px; margin-bottom: 2px; }
+.prep-card { background: linear-gradient(135deg, #0F6E56, #1D9E75); border-radius: var(--radius); cursor: pointer; box-shadow: 0 4px 16px rgba(29,158,117,0.3); position: relative; overflow: hidden; }
+.prep-card::after { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; }
+.prep-card-inner { display: flex; align-items: center; gap: 12px; padding: 13px 14px; }
+.prep-card-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.prep-compact-body { flex: 1; min-width: 0; }
+.prep-chevron { flex-shrink: 0; transition: transform 0.25s ease; }
+.prep-card.open .prep-chevron { transform: rotate(180deg); }
+.prep-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+.prep-title { font-size: 14px; font-weight: 700; color: white; }
+.prep-meta { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 3px; }
+.prep-cta { margin-top: 12px; display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.2); color: white; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 20px; }
+/* Accordion expand body */
+.prep-expand { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, opacity 0.25s ease; opacity: 0; }
+.prep-card.open .prep-expand { max-height: 200px; opacity: 1; }
+.prep-expand-inner { padding: 0 14px 14px; border-top: 1px solid rgba(255,255,255,0.15); margin: 0 0 0; }
+.prep-detail-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.prep-detail-row:last-child { border-bottom: none; }
+.prep-detail-label { font-size: 12px; color: rgba(255,255,255,0.65); flex: 1; }
+.prep-detail-val { font-size: 12px; font-weight: 600; color: white; }
+.prep-expand-cta { margin-top: 10px; width: 100%; background: rgba(255,255,255,0.2); border: none; border-radius: 10px; padding: 10px; font-size: 13px; font-weight: 700; color: white; cursor: pointer; font-family: inherit; }
+.prep-expand-cta:active { background: rgba(255,255,255,0.3); }
+.meds-progress-compact { padding: 9px 14px; }
+.med-item-compact { padding: 8px 14px; }
+
+/* ── Medication detail page ── */
+.page-med { display: none; position: absolute; inset: 0; background: var(--bg); z-index: 40; flex-direction: column; overflow: hidden; border-radius: 52px; }
+.page-med.active { display: flex; }
+.med-detail-bar { flex-shrink: 0; padding: 56px 20px 12px; display: flex; align-items: center; gap: 12px; background: var(--bg); }
+.med-detail-bar .icon-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.med-detail-bar .icon-btn svg { width: 18px; height: 18px; stroke: var(--text); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.med-detail-title { flex: 1; font-size: 17px; font-weight: 700; color: var(--text); }
+.med-detail-edit { font-size: 14px; font-weight: 600; color: var(--teal); cursor: pointer; }
+.med-detail-scroll { flex: 1; overflow-y: auto; padding: 0 20px 100px; scrollbar-width: none; }
+.med-detail-scroll::-webkit-scrollbar { display: none; }
+.med-hero { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
+.med-hero-ico { width: 48px; height: 48px; border-radius: 14px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.med-hero-ico svg { width: 24px; height: 24px; fill: none; stroke: var(--teal-dark); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.med-hero-info { flex: 1; }
+.med-hero-name { font-size: 20px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.med-hero-dose { font-size: 14px; color: var(--text2); margin-top: 2px; }
+.med-status-badge { font-size: 11px; font-weight: 700; color: var(--teal-dark); background: var(--teal-light); padding: 4px 10px; border-radius: 20px; }
+.med-section { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; margin-bottom: 10px; }
+.med-section-title { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 16px 8px; border-bottom: 1px solid var(--border); }
+.med-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.med-row:last-child { border-bottom: none; }
+.med-row-label { font-size: 13px; color: var(--text2); }
+.med-row-val { font-size: 13px; font-weight: 600; color: var(--text); }
+.med-schedule-time { display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; border-bottom: 1px solid var(--border); }
+.med-schedule-time:last-child { border-bottom: none; }
+.med-time-label { font-size: 13px; font-weight: 600; color: var(--text); }
+.med-time-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.med-time-badge { font-size: 12px; font-weight: 600; color: var(--teal-dark); background: var(--teal-light); padding: 4px 10px; border-radius: 8px; }
+.med-history-row { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+.med-history-row:last-child { border-bottom: none; }
+.med-hist-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.med-hist-dot.taken { background: var(--teal); }
+.med-hist-dot.missed { background: var(--border); }
+.med-hist-info { flex: 1; font-size: 13px; color: var(--text); font-weight: 500; }
+.med-hist-info span { font-size: 11px; color: var(--text3); display: block; margin-top: 1px; }
+.med-hist-status { font-size: 12px; font-weight: 600; }
+.med-hist-status.taken { color: var(--teal); }
+.med-hist-status.missed { color: var(--text3); }
+.med-stop-btn { width: 100%; padding: 14px; border-radius: var(--radius); border: 1.5px solid var(--red); background: transparent; color: var(--red); font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; margin-top: 4px; }
+
+/* ── Med Bottom Sheet ── */
+.bs-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; border-radius: 52px; }
+.bs-overlay.open { opacity: 1; pointer-events: all; }
+.bs-sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--surface); border-radius: 28px 28px 0 0; z-index: 51; transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1); padding-bottom: 32px; }
+.bs-sheet.open { transform: translateY(0); }
+.bs-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto 0; }
+.bs-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 20px 0; }
+.bs-header-left { flex: 1; }
+.bs-med-name { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.4px; }
+.bs-med-dose { font-size: 14px; color: var(--text2); margin-top: 2px; }
+.bs-badge { display: inline-block; font-size: 11px; font-weight: 700; color: var(--teal-dark); background: var(--teal-light); padding: 3px 9px; border-radius: 20px; margin-top: 6px; }
+.bs-close { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+.bs-close svg { width: 16px; height: 16px; stroke: var(--text2); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.bs-edit-row { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 0; }
+.bs-time-label { font-size: 13px; color: var(--text3); margin-bottom: 2px; }
+.bs-time-val { font-size: 17px; font-weight: 700; color: var(--text); }
+.bs-stepper { display: flex; align-items: center; gap: 0; background: var(--surface2); border-radius: 12px; overflow: hidden; }
+.bs-stepper-btn { width: 38px; height: 38px; border: none; background: transparent; font-size: 20px; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 400; }
+.bs-stepper-btn:active { background: var(--border); }
+.bs-stepper-val { min-width: 38px; text-align: center; font-size: 15px; font-weight: 700; color: var(--text); }
+.bs-stepper-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.bs-stepper-label { font-size: 11px; color: var(--text3); }
+.bs-actions { padding: 20px 20px 0; display: flex; flex-direction: column; gap: 0; }
+.bs-btn-primary { width: 100%; padding: 15px; background: var(--teal); color: white; border: none; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.bs-btn-primary:active { background: var(--teal-dark); }
+.bs-btn-skip { width: 100%; padding: 12px; background: transparent; color: var(--text2); border: none; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; margin-top: 2px; }
+.bs-footer { display: flex; flex-direction: column; padding: 14px 20px 0; gap: 0; }
+.bs-footer-row { display: flex; align-items: center; justify-content: space-between; }
+.bs-divider { height: 1px; background: var(--border); margin: 14px 0 0; }
+.bs-pills-left { font-size: 12px; color: var(--text3); }
+.bs-edit-link { font-size: 13px; font-weight: 600; color: var(--teal); cursor: pointer; text-align: center; padding: 14px 0 0; display: block; }
+
+/* Tab bar — fixed at bottom of phone as flex child */
+.tab-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 86px; background: rgba(255,255,255,0.98); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid #E2E0D8; box-shadow: 0 -8px 24px rgba(0,0,0,0.06); display: flex; align-items: flex-start; justify-content: space-around; padding: 10px 0 0; z-index: 30; }
+.tab { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; cursor: pointer; padding: 4px 0; }
+.tab svg { width: 25px; height: 25px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tab span { font-size: 10px; font-weight: 500; }
+.tab.active svg { stroke: var(--teal); }
+.tab.active span { color: var(--teal); font-weight: 700; }
+.tab:not(.active) svg { stroke: var(--text3); }
+.tab:not(.active) span { color: var(--text3); }
+.fab-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; cursor: pointer; padding: 0; margin-top: -22px; }
+.fab { width: 56px; height: 56px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(29,158,117,0.45); border: 3px solid var(--bg); transition: transform 0.15s; }
+.fab:active { transform: scale(0.93); }
+.fab svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.fab-wrap span { font-size: 10px; font-weight: 700; color: var(--teal); margin-top: 2px; }
+
+/* ─────────── LOG BOTTOM SHEET ─────────── */
+.log-bs-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); z-index: 60; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; border-radius: 52px; }
+.log-bs-overlay.open { opacity: 1; pointer-events: all; }
+.log-bs { position: absolute; left: 0; right: 0; bottom: 0; background: var(--bg); border-radius: 28px 28px 0 0; z-index: 61; transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1); max-height: 88%; display: flex; flex-direction: column; overflow: hidden; }
+.log-bs.open { transform: translateY(0); }
+.log-bs-handle { width: 36px; height: 4px; background: #D0CFC8; border-radius: 2px; margin: 10px auto 0; flex-shrink: 0; }
+/* Views inside log-bs */
+.log-view { display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0; }
+.log-view.active { display: flex; }
+/* Voice screen inside BS */
+.log-voice-body { flex: 1; display: flex; flex-direction: column; padding: 0 22px; overflow: hidden; }
+.log-voice-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 8px; flex-shrink: 0; }
+.log-voice-title { font-size: 17px; font-weight: 700; color: var(--text); }
+.log-bs-close { width: 32px; height: 32px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.log-bs-close svg { width: 16px; height: 16px; stroke: var(--text2); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ─────────── LOG FLOW ─────────── */
+.view { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.view.active { display: flex; }
+.topbar { flex-shrink: 0; padding: 4px 18px 10px; display: flex; align-items: center; justify-content: space-between; }
+.icon-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.icon-btn svg { width: 20px; height: 20px; stroke: var(--text); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.topbar-title { font-size: 16px; font-weight: 700; color: var(--text); }
+
+.choice-body { flex: 1; padding: 10px 22px 30px; display: flex; flex-direction: column; }
+.choice-intro { margin-bottom: 28px; }
+.choice-intro h1 { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; line-height: 1.2; }
+.choice-intro p { font-size: 15px; color: var(--text2); margin-top: 6px; }
+.choice-list { display: flex; flex-direction: column; gap: 14px; }
+.choice-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; display: flex; align-items: center; gap: 16px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.12s; }
+.choice-card:active { transform: scale(0.98); }
+.choice-card.primary { background: var(--teal); border-color: var(--teal); box-shadow: 0 6px 20px rgba(29,158,117,0.3); }
+.choice-icon { width: 54px; height: 54px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.choice-card.primary .choice-icon { background: rgba(255,255,255,0.2); }
+.choice-icon svg { width: 26px; height: 26px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.choice-card.primary .choice-icon svg { stroke: white; }
+.choice-text { flex: 1; }
+.choice-title { font-size: 17px; font-weight: 700; color: var(--text); }
+.choice-card.primary .choice-title { color: white; }
+.choice-sub { font-size: 13px; color: var(--text3); margin-top: 2px; }
+.choice-card.primary .choice-sub { color: rgba(255,255,255,0.8); }
+.choice-arrow { color: var(--text3); font-size: 22px; }
+.choice-card.primary .choice-arrow { color: rgba(255,255,255,0.7); }
+
+.voice-body { flex: 1; display: flex; flex-direction: column; padding: 0 22px; overflow: hidden; }
+.voice-transcript { flex: 1; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; justify-content: flex-end; scrollbar-width: none; }
+.voice-transcript::-webkit-scrollbar { display: none; }
+.transcript-text { font-size: 24px; font-weight: 500; color: var(--text); line-height: 1.5; letter-spacing: -0.3px; }
+.transcript-placeholder { font-size: 22px; color: var(--text3); line-height: 1.5; font-weight: 500; }
+.cursor { display: inline-block; width: 3px; height: 26px; background: var(--teal); vertical-align: text-bottom; margin-left: 2px; animation: blink 1s step-start infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.voice-controls { flex-shrink: 0; padding: 20px 0 36px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.waveform { display: flex; align-items: center; gap: 4px; height: 40px; }
+.wave-bar { width: 4px; background: var(--teal); border-radius: 2px; animation: wave 1s ease-in-out infinite; }
+@keyframes wave { 0%,100%{height:8px} 50%{height:32px} }
+.wave-bar:nth-child(1){animation-delay:0s} .wave-bar:nth-child(2){animation-delay:.1s} .wave-bar:nth-child(3){animation-delay:.2s} .wave-bar:nth-child(4){animation-delay:.3s} .wave-bar:nth-child(5){animation-delay:.4s} .wave-bar:nth-child(6){animation-delay:.5s} .wave-bar:nth-child(7){animation-delay:.4s} .wave-bar:nth-child(8){animation-delay:.3s} .wave-bar:nth-child(9){animation-delay:.2s} .wave-bar:nth-child(10){animation-delay:.1s} .wave-bar:nth-child(11){animation-delay:.2s} .wave-bar:nth-child(12){animation-delay:.3s} .wave-bar:nth-child(13){animation-delay:.4s} .wave-bar:nth-child(14){animation-delay:.3s}
+.voice-actions { display: flex; align-items: center; gap: 28px; }
+.done-btn { width: 60px; height: 60px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 16px rgba(29,158,117,0.4); }
+.done-btn svg { width: 26px; height: 26px; stroke: white; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.voice-hint { font-size: 13px; color: var(--text3); }
+.switch-text-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); color: var(--text2); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
+.switch-text-btn svg { width: 16px; height: 16px; stroke: var(--text2); fill: none; stroke-width: 2; }
+
+.review-body { flex: 1; overflow-y: auto; padding: 0 22px 20px; scrollbar-width: none; }
+.review-body::-webkit-scrollbar { display: none; }
+.review-intro { margin-bottom: 18px; }
+.review-intro h2 { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.4px; }
+.review-intro p { font-size: 14px; color: var(--text2); margin-top: 4px; }
+.transcript-quote { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--teal); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 20px; font-size: 14px; color: var(--text2); line-height: 1.5; font-style: italic; }
+.entity-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+.entity-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.entity-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.03); transition: opacity 0.2s; }
+.entity-card.removed { opacity: 0.35; }
+.entity-icon { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.entity-icon svg { width: 20px; height: 20px; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.ei-red { background: var(--red-light); } .ei-red svg { stroke: var(--red); }
+.ei-amber { background: var(--amber-light); } .ei-amber svg { stroke: var(--amber); }
+.ei-teal { background: var(--teal-light); } .ei-teal svg { stroke: var(--teal-dark); }
+.ei-blue { background: var(--blue-light); } .ei-blue svg { stroke: var(--blue); }
+/* Entity inline edit / add */
+.entity-edit-wrap { display: flex; gap: 8px; align-items: center; margin-top: 2px; }
+.entity-edit-input { flex: 1; border: 2px solid var(--teal); border-radius: 8px; padding: 7px 10px; font-size: 15px; font-weight: 600; color: var(--text); outline: none; font-family: inherit; width: 100%; }
+.entity-edit-save { background: var(--teal); color: white; border: none; border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+.entity-type-select { border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; font-size: 12px; font-weight: 600; color: var(--text2); outline: none; font-family: inherit; background: var(--surface); }
+.entity-info { flex: 1; min-width: 0; }
+.entity-type { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.04em; }
+.entity-value { font-size: 16px; font-weight: 600; color: var(--text); margin-top: 1px; }
+.entity-value.struck { text-decoration: line-through; color: var(--text3); }
+.confidence-badge { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 20px; margin-top: 4px; }
+.cf-low { background: var(--amber-light); color: var(--amber); }
+.entity-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.ent-btn { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border); background: var(--surface); }
+.ent-btn svg { width: 17px; height: 17px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ent-btn.edit svg { stroke: var(--text2); } .ent-btn.remove svg { stroke: var(--red); }
+.ent-btn:active { background: var(--surface2); }
+.add-entity-btn { width: 100%; border: 1.5px dashed var(--border); background: none; border-radius: var(--radius-sm); padding: 12px; font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.add-entity-btn svg { width: 16px; height: 16px; stroke: var(--text2); fill: none; stroke-width: 2; stroke-linecap: round; }
+.review-footer { flex-shrink: 0; padding: 14px 22px 24px; background: var(--surface); border-top: 1px solid var(--border); display: flex; gap: 10px; }
+.btn-secondary { flex: 0 0 auto; padding: 0 20px; height: 52px; background: var(--surface2); border: none; border-radius: 16px; font-size: 15px; font-weight: 600; color: var(--text2); cursor: pointer; }
+.btn-primary { flex: 1; height: 52px; background: var(--teal); border: none; border-radius: 16px; font-size: 15px; font-weight: 700; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 16px rgba(29,158,117,0.3); }
+.btn-primary svg { width: 18px; height: 18px; stroke: white; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.success-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 40px; text-align: center; }
+.success-circle { width: 90px; height: 90px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: pop 0.4s ease-out; }
+@keyframes pop { 0%{transform:scale(0)} 60%{transform:scale(1.1)} 100%{transform:scale(1)} }
+.success-circle svg { width: 44px; height: 44px; stroke: var(--teal); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.success-body h2 { font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.4px; }
+.success-body p { font-size: 15px; color: var(--text2); margin-top: 8px; line-height: 1.5; }
+.success-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-top: 32px; }
+.success-btn-primary { width: 100%; height: 52px; background: var(--teal); border: none; border-radius: 16px; font-size: 15px; font-weight: 700; color: white; cursor: pointer; }
+.success-btn-text { background: none; border: none; font-size: 15px; font-weight: 600; color: var(--text2); cursor: pointer; padding: 8px; }
+
+.text-body { flex: 1; padding: 10px 22px; display: flex; flex-direction: column; }
+.text-area { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; font-size: 17px; color: var(--text); line-height: 1.6; resize: none; outline: none; font-family: inherit; margin-bottom: 14px; }
+.text-area::placeholder { color: var(--text3); }
+
+/* ───── DOCUMENTS PAGE ───── */
+/* ─────────── LIST ─────────── */
+.list-screen { flex: 1; overflow-y: auto; padding: 0 22px 100px; scrollbar-width: none; }
+.list-screen::-webkit-scrollbar { display: none; }
+.page-title { font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -0.6px; padding: 4px 0 12px; }
+/* Upload block — compact */
+.upload-block {
+  background: var(--surface);
+  border: 1.5px dashed var(--teal-mid, #5DCAA5);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer; margin-bottom: 14px;
+  transition: background 0.15s;
+}
+.upload-block:active { background: var(--teal-light); }
+.upload-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.upload-icon svg { width: 18px; height: 18px; stroke: var(--teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.upload-text { flex: 1; min-width: 0; }
+.upload-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.upload-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+.upload-methods { display: flex; gap: 10px; flex-shrink: 0; }
+.upload-method { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text2); font-weight: 600; background: var(--surface2); padding: 5px 8px; border-radius: 8px; }
+.upload-method svg { width: 13px; height: 13px; stroke: var(--text2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* Processing inline inside upload-block area */
+.upload-processing {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.upload-processing.active { display: block; }
+/* Section label */
+.slabel { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+.slabel .count { color: var(--text3); font-weight: 600; }
+/* Document card */
+.doc-list { display: flex; flex-direction: column; gap: 10px; }
+.doc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex; align-items: center; gap: 13px;
+  cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: background 0.1s;
+}
+.doc-card:active { background: var(--surface2); }
+.doc-thumb {
+  width: 46px; height: 56px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; position: relative;
+}
+.doc-thumb svg { width: 22px; height: 22px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.dt-lab { background: var(--teal-light); } .dt-lab svg { stroke: var(--teal-dark); }
+.dt-visit { background: var(--amber-light); } .dt-visit svg { stroke: var(--amber); }
+.dt-rx { background: var(--blue-light); } .dt-rx svg { stroke: var(--blue); }
+.dt-vac { background: var(--purple-light); } .dt-vac svg { stroke: var(--purple); }
+.dt-symptom { background: var(--surface2); } .dt-symptom svg { stroke: var(--text2); }
+/* Month header in timeline */
+.month-header { font-size: 13px; font-weight: 700; color: var(--text); padding: 4px 2px 0; letter-spacing: -0.2px; }
+.month-header:first-child { padding-top: 0; }
+.records-label { padding: 0 2px !important; margin-bottom: 6px !important; }
+.doc-list { gap: 8px; }
+.doc-list .month-header + .doc-card { margin-top: 0; }
+/* Logged-by-you pill */
+.sp-log { background: var(--surface2); color: var(--text2); }
+/* Chip icons */
+.chip svg { width: 13px; height: 13px; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 5px; stroke: currentColor; display: inline-block; }
+.chip { display: inline-flex; align-items: center; }
+.doc-info { flex: 1; min-width: 0; }
+.doc-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.doc-meta { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.doc-status { display: flex; align-items: center; gap: 5px; margin-top: 5px; }
+.status-pill { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px; display: inline-flex; align-items: center; gap: 3px; }
+.sp-ok { background: var(--teal-light); color: var(--teal-dark); }
+.sp-review { background: var(--amber-light); color: var(--amber); }
+.sp-processing { background: var(--blue-light); color: var(--blue); }
+.doc-arrow { color: var(--text3); font-size: 18px; flex-shrink: 0; }
+/* Processing card (inline) */
+.processing-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.proc-top { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
+.proc-thumb { width: 46px; height: 56px; border-radius: 10px; background: var(--surface2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.proc-thumb svg { width: 22px; height: 22px; fill: none; stroke: var(--text2); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.proc-info { flex: 1; }
+.proc-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.proc-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.proc-spinner { width: 22px; height: 22px; border: 2.5px solid var(--teal-light); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.proc-steps { display: flex; flex-direction: column; gap: 9px; }
+.proc-step { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.proc-step-icon { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.proc-step.done .proc-step-icon { background: var(--teal); }
+.proc-step.done .proc-step-icon svg { display: block; width: 11px; height: 11px; stroke: white; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.proc-step.active .proc-step-icon { background: var(--teal-light); border: 2px solid var(--teal); }
+.proc-step.pending .proc-step-icon { background: var(--surface2); border: 2px solid var(--border); }
+.proc-step-icon svg { display: none; }
+.proc-step.done .proc-step-text { color: var(--text2); }
+.proc-step.active .proc-step-text { color: var(--text); font-weight: 600; }
+.proc-step.pending .proc-step-text { color: var(--text3); }
+/* ─────────── DOCUMENT DETAIL ─────────── */
+.detail-screen { flex: 1; overflow-y: auto; padding: 0 22px 30px; scrollbar-width: none; }
+.detail-screen::-webkit-scrollbar { display: none; }
+/* Doc header card */
+.detail-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.dh-top { display: flex; align-items: center; gap: 13px; }
+.dh-thumb { width: 50px; height: 62px; border-radius: 11px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.dh-thumb svg { width: 24px; height: 24px; fill: none; stroke: var(--teal-dark); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.dh-info { flex: 1; }
+.dh-type { font-size: 11px; font-weight: 600; color: var(--teal-dark); text-transform: uppercase; letter-spacing: 0.04em; }
+.dh-name { font-size: 17px; font-weight: 700; color: var(--text); margin-top: 2px; line-height: 1.25; }
+.dh-meta { font-size: 13px; color: var(--text3); margin-top: 4px; }
+.dh-view-btn {
+  margin-top: 14px; width: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--surface2); border: none; border-radius: 12px;
+  padding: 11px; font-size: 14px; font-weight: 600; color: var(--text);
+  cursor: pointer;
+}
+.dh-view-btn svg { width: 17px; height: 17px; stroke: var(--text2); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* AI summary */
+.ai-summary {
+  background: linear-gradient(135deg, #EEEDFE, #E1F5EE);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.ai-summary-label { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 7px; }
+.ai-summary-label svg { width: 14px; height: 14px; }
+.ai-summary-text { font-size: 14px; color: var(--text); line-height: 1.55; }
+/* Extracted values */
+.values-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.value-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.1s;
+}
+.value-row:active { background: var(--surface2); }
+.value-row:last-child { border-bottom: none; }
+.val-status-bar { width: 4px; height: 34px; border-radius: 4px; flex-shrink: 0; }
+.vs-high { background: var(--amber); }
+.vs-low { background: var(--red); }
+.vs-normal { background: var(--teal); }
+.val-info { flex: 1; min-width: 0; }
+.val-name { font-size: 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
+.val-range { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.val-src { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; color: var(--blue); margin-top: 4px; font-weight: 500; }
+.val-src svg { width: 11px; height: 11px; stroke: var(--blue); fill: none; stroke-width: 2; }
+.val-right { text-align: right; flex-shrink: 0; }
+.val-value { font-size: 16px; font-weight: 700; color: var(--text); }
+.val-value.high { color: var(--amber); }
+.val-value.low { color: var(--red); }
+.warn-flag { font-size: 11px; font-weight: 600; color: var(--amber); background: var(--amber-light); padding: 1px 5px; border-radius: 5px; }
+/* Search */
+.search-box { display: flex; align-items: center; gap: 9px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 14px; margin-bottom: 12px; }
+.search-box svg { width: 18px; height: 18px; flex-shrink: 0; }
+.search-box input { flex: 1; border: none; outline: none; background: none; font-size: 15px; color: var(--text); font-family: inherit; }
+.search-box input::placeholder { color: var(--text3); }
+.search-clear { color: var(--text3); font-size: 14px; cursor: pointer; display: none; }
+.search-clear.show { display: block; }
+/* Filter chips */
+.filter-chips { display: flex; gap: 8px; margin-bottom: 22px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.filter-chips::-webkit-scrollbar { display: none; }
+.chip { flex-shrink: 0; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text2); transition: all 0.12s; white-space: nowrap; }
+.chip.active { background: var(--teal); border-color: var(--teal); color: white; }
+/* No results */
+.no-results { text-align: center; padding: 40px 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--text2); font-size: 15px; font-weight: 600; }
+.no-results .nr-sub { font-size: 13px; color: var(--text3); font-weight: 400; }
+/* Compact collapsible legend */
+.legend-compact { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; }
+.legend-head { display: flex; align-items: center; gap: 8px; padding: 11px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text2); }
+.legend-head svg { width: 16px; height: 16px; flex-shrink: 0; }
+.legend-head span:nth-child(2) { flex: 1; }
+.legend-chevron { font-size: 14px; transition: transform 0.2s; color: var(--text3); }
+.legend-compact.open .legend-chevron { transform: rotate(180deg); }
+.legend-content { max-height: 0; overflow: hidden; transition: max-height 0.25s, padding 0.25s; padding: 0 14px; }
+.legend-compact.open .legend-content { max-height: 240px; padding: 0 14px 12px; }
+.legend-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); line-height: 1.45; margin-bottom: 9px; }
+.legend-row:last-child { margin-bottom: 0; }
+.legend-row .lb { width: 4px; height: 18px; border-radius: 4px; flex-shrink: 0; }
+.legend-row strong { color: var(--text); font-weight: 600; }
+/* Review banner */
+.review-banner { display: flex; align-items: flex-start; gap: 9px; background: var(--amber-light); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 16px; font-size: 13px; color: var(--text); line-height: 1.45; transition: opacity 0.3s, max-height 0.3s; }
+.review-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+.review-banner.resolved { background: var(--teal-light); }
+/* Inline crop (accordion) */
+.crop-row { background: var(--surface2); padding: 0 16px; max-height: 0; overflow: hidden; transition: max-height 0.25s, padding 0.25s; }
+.crop-row.open { max-height: 200px; padding: 12px 16px; }
+.crop-label { font-size: 11px; color: var(--text2); margin-bottom: 8px; }
+.crop-image {
+  background: white; border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 14px; font-family: 'Courier New', monospace; font-size: 13px; color: var(--text);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.crop-image .hl { background: #FFF3C4; padding: 1px 4px; border-radius: 3px; font-weight: 700; }
+.crop-actions { display: flex; gap: 8px; margin-top: 10px; }
+.crop-btn { flex: 1; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; }
+.crop-btn.confirm { background: var(--teal); color: white; }
+.crop-btn.edit { background: white; color: var(--text2); border: 1px solid var(--border); }
+/* Edit inline input */
+.edit-input-wrap { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+.edit-input { flex: 1; border: 2px solid var(--teal); border-radius: 8px; padding: 9px 12px; font-size: 15px; font-weight: 600; color: var(--text); outline: none; font-family: inherit; }
+.edit-unit { font-size: 13px; color: var(--text3); font-weight: 500; }
+.edit-save { background: var(--teal); color: white; border: none; border-radius: 8px; padding: 9px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+/* footer in list for processing nav demo */
+.demo-hint { text-align: center; font-size: 11px; color: var(--text3); padding: 16px; }
+.demo-link { color: var(--teal); font-weight: 600; cursor: pointer; }
+/* Ask page */
+.ask-bubble-user{max-width:78%;padding:11px 14px;font-size:14px;line-height:1.45;background:var(--teal);color:white;border-radius:18px 18px 4px 18px;animation:askPop .25s ease}
+.ask-bubble-ai{max-width:88%;padding:13px 15px;font-size:14px;line-height:1.45;background:var(--surface);border:1px solid var(--border);border-radius:4px 18px 18px 18px;animation:askPop .25s ease}
+@keyframes askPop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ask-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--text3);animation:askBounce .9s ease infinite;margin:0 2px}
+.ask-dot:nth-child(2){animation-delay:.15s}.ask-dot:nth-child(3){animation-delay:.3s}
+@keyframes askBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-right">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A18" stroke-width="2" stroke-linecap="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="#1A1A18"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A18" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="16" height="10" rx="2"/><rect x="4" y="9" width="10" height="6" rx="1" fill="#1A1A18" stroke="none"/></svg>
+    </div>
+  </div>
+
+  <!-- ══════════════ HOME PAGE ══════════════ -->
+  <div class="page active" id="page-home">
+    <div class="header">
+      <div>
+        <div class="greeting">Good morning 👋</div>
+        <div class="greeting-date">Sunday, June 14</div>
+      </div>
+      <div class="avatar">IK</div>
+    </div>
+    <div class="screen">
+
+      <div class="slabel">Upcoming</div>
+      <div class="prep-wrap">
+        <div class="prep-card prep-card-compact" id="upcoming-card" onclick="toggleUpcoming()">
+          <div class="prep-card-inner">
+            <div class="prep-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="prep-compact-body">
+              <div class="prep-label">Appointment in 3 days</div>
+              <div class="prep-title">Dr. Kovalenko · Cardiology</div>
+            </div>
+            <div class="prep-chevron">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="prep-expand">
+            <div class="prep-expand-inner">
+              <div class="prep-detail-row">
+                <div class="prep-detail-label">Date & time</div>
+                <div class="prep-detail-val">June 18 · 11:00</div>
+              </div>
+              <div class="prep-detail-row">
+                <div class="prep-detail-label">Doctor</div>
+                <div class="prep-detail-val">Dr. Kovalenko</div>
+              </div>
+              <div class="prep-detail-row">
+                <div class="prep-detail-label">Clinic</div>
+                <div class="prep-detail-val">City Cardiology Center</div>
+              </div>
+              <div class="prep-detail-row">
+                <div class="prep-detail-label">Reason</div>
+                <div class="prep-detail-val">Blood pressure follow-up</div>
+              </div>
+              <button class="prep-expand-cta" onclick="event.stopPropagation(); alert('Prepare summary — coming soon')">Prepare appointment summary ›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel">Today</div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-head">
+            <div class="m-ico m-ico-teal"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
+            <span class="metric-label">Sleep</span>
+          </div>
+          <div class="metric-bottom">
+            <div class="metric-value">6.5<small> h</small></div>
+            <div class="metric-sub">45m below avg</div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-head">
+            <div class="m-ico m-ico-teal"><svg viewBox="0 0 24 24"><path d="M13 4v6h6"/><path d="M5 20l4-9 4 4 6-9"/></svg></div>
+            <span class="metric-label">Steps</span>
+          </div>
+          <div class="metric-bottom">
+            <div class="metric-value">6,240</div>
+            <div class="metric-sub up">↑ 12% above avg</div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-head">
+            <div class="m-ico m-ico-soft"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10z"/></svg></div>
+            <span class="metric-label">Weight</span>
+          </div>
+          <div class="metric-bottom">
+            <div class="metric-value">74.2<small> kg</small></div>
+            <div class="metric-sub">Healthy range</div>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-head">
+            <div class="m-ico m-ico-amber"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+            <span class="metric-label">Blood pressure</span>
+          </div>
+          <div class="metric-bottom">
+            <div class="metric-value">132/85</div>
+            <div class="metric-sub down">Slightly high</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel">Today's medications</div>
+      <div class="meds-wrap">
+        <div class="meds-card">
+          <div class="meds-progress meds-progress-compact">
+            <svg width="32" height="32" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="16" fill="none" stroke="#EFEEEA" stroke-width="4"/>
+              <circle id="ring" cx="20" cy="20" r="16" fill="none" stroke="#1D9E75" stroke-width="4" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="67" transform="rotate(-90 20 20)"/>
+            </svg>
+            <div class="meds-progress-text"><strong id="progress-label">1 of 3 taken</strong><span>Keep it up today</span></div>
+          </div>
+          <div class="med-item med-item-compact">
+            <div class="med-check done" onclick="toggleMed(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="med-info" onclick="openMedSheet('Lisinopril','10 mg','08:00','taken')"><div class="med-name taken">Lisinopril</div><div class="med-time">Morning · 8:00</div></div>
+            <div class="med-dose" onclick="openMedSheet('Lisinopril','10 mg','08:00','taken')">10 mg</div>
+          </div>
+          <div class="med-item med-item-compact">
+            <div class="med-check" onclick="toggleMed(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="med-info" onclick="openMedSheet('Aspirin','100 mg','08:00','pending')"><div class="med-name">Aspirin</div><div class="med-time">Morning · 8:00</div></div>
+            <div class="med-dose" onclick="openMedSheet('Aspirin','100 mg','08:00','pending')">100 mg</div>
+          </div>
+          <div class="med-item med-item-compact">
+            <div class="med-check" onclick="toggleMed(this)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="med-info" onclick="openMedSheet('Vitamin D3','2000 IU','20:00','pending')"><div class="med-name">Vitamin D3</div><div class="med-time">Evening · 20:00</div></div>
+            <div class="med-dose" onclick="openMedSheet('Vitamin D3','2000 IU','20:00','pending')">2000 IU</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slabel"><span>Latest lab results</span><a href="javascript:void(0)" onclick="openDocs()">View all</a></div>
+      <div class="labs-wrap" id="labs-wrap">
+        <div class="labs-card">
+          <div class="lab-row">
+            <div class="lab-status-bar sb-low"></div>
+            <div class="lab-info"><div class="lab-name">Hemoglobin</div><div class="lab-range">Ref: 13.0–17.0 g/dL</div></div>
+            <div class="lab-right"><div class="lab-value low">12.4</div><div class="lab-trend t-down">↓ from 13.1</div></div>
+          </div>
+          <div class="lab-row">
+            <div class="lab-status-bar sb-high"></div>
+            <div class="lab-info"><div class="lab-name">Glucose</div><div class="lab-range">Ref: 3.9–5.6 mmol/L</div></div>
+            <div class="lab-right"><div class="lab-value high">6.1</div><div class="lab-trend t-up">↑ from 5.4</div></div>
+          </div>
+          <div class="lab-row">
+            <div class="lab-status-bar sb-normal"></div>
+            <div class="lab-info"><div class="lab-name">Cholesterol</div><div class="lab-range">Ref: &lt; 5.2 mmol/L</div></div>
+            <div class="lab-right"><div class="lab-value">4.8</div><div class="lab-trend t-good">↓ improving</div></div>
+          </div>
+          <div class="labs-footer" id="labs-footer">
+            <span><strong>2 values</strong> out of range</span>
+            <div style="display:flex;align-items:center;gap:14px">
+              <span class="src"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:3px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>City Lab · June 10</span>
+              <button onclick="collapseLabCard()" style="background:none;border:none;padding:0;font-size:12px;font-weight:600;color:var(--teal);cursor:pointer;font-family:inherit;white-space:nowrap">Mark as reviewed</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log bottom sheet — scoped to page-home -->
+    <div class="log-bs-overlay" id="log-bs-overlay" onclick="closeLogSheet()"></div>
+    <div class="log-bs" id="log-bs">
+      <div class="log-bs-handle"></div>
+
+      <div class="log-view active" id="log-view-choice">
+        <div class="choice-body" style="padding-top:6px">
+          <div class="log-voice-header">
+            <div class="log-voice-title">Add to record</div>
+            <div class="log-bs-close" onclick="closeLogSheet()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          </div>
+          <div class="choice-list">
+            <div class="choice-card primary" onclick="showLogView('log-view-voice')">
+              <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+              <div class="choice-text"><div class="choice-title">Speak</div><div class="choice-sub">Just talk — we'll sort it out</div></div>
+              <span class="choice-arrow">›</span>
+            </div>
+            <div class="choice-card" onclick="showLogView('log-view-text')">
+              <div class="choice-icon" style="background:var(--blue-light)"><svg viewBox="0 0 24 24" stroke="#378ADD"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div>
+              <div class="choice-text"><div class="choice-title">Type</div><div class="choice-sub">Write it out yourself</div></div>
+              <span class="choice-arrow">›</span>
+            </div>
+            <div class="choice-card" onclick="alert('Camera / file picker — coming soon')">
+              <div class="choice-icon" style="background:var(--purple-light)"><svg viewBox="0 0 24 24" stroke="#7F77DD"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+              <div class="choice-text"><div class="choice-title">Photo or document</div><div class="choice-sub">Scan a lab result or prescription</div></div>
+              <span class="choice-arrow">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-view" id="log-view-voice">
+        <div class="log-voice-body">
+          <div class="log-voice-header">
+            <div class="icon-btn" onclick="showLogView('log-view-choice')"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <div class="log-voice-title">Listening…</div>
+            <div class="log-bs-close" onclick="closeLogSheet()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          </div>
+          <div class="voice-transcript" id="log-transcript" style="min-height:120px">
+            <div class="transcript-placeholder" id="log-placeholder">Tell me what's going on —<br>symptoms, how you feel,<br>or anything health-related.</div>
+            <div class="transcript-text" id="log-live-text" style="display:none"></div>
+          </div>
+          <div class="voice-controls">
+            <div class="waveform"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+            <div class="voice-actions">
+              <div class="switch-text-btn" onclick="showLogView('log-view-text')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Type</div>
+              <div class="done-btn" onclick="showLogView('log-view-review')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+            </div>
+            <div class="voice-hint">Tap ✓ when you're done speaking</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-view" id="log-view-text">
+        <div class="log-voice-body">
+          <div class="log-voice-header">
+            <div class="icon-btn" onclick="showLogView('log-view-choice')"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <div class="log-voice-title">Write it down</div>
+            <div class="log-bs-close" onclick="closeLogSheet()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          </div>
+          <div class="text-body" style="flex:1"><textarea class="text-area" placeholder="e.g. I've had a headache since this morning..."></textarea></div>
+          <div class="review-footer"><button class="btn-primary" onclick="showLogView('log-view-review')">Analyze <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
+        </div>
+      </div>
+
+      <div class="log-view" id="log-view-review" style="overflow-y:auto">
+        <div class="log-voice-body">
+          <div class="log-voice-header">
+            <div class="icon-btn" onclick="showLogView('log-view-voice')"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+            <div class="log-voice-title">Review</div>
+            <div class="log-bs-close" onclick="closeLogSheet()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          </div>
+        </div>
+        <div class="review-body" style="flex:1">
+          <div class="review-intro"><h2>Here's what I caught</h2><p>Check each item before saving.</p></div>
+          <div class="transcript-quote">"I've had a headache since this morning, about 7 out of 10, took ibuprofen around 9am."</div>
+          <div class="entity-label">Detected · 4 items</div>
+          <div class="entity-list">
+            <div class="entity-card"><div class="entity-icon ei-red"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div><div class="entity-info"><div class="entity-type">Symptom</div><div class="entity-value">Headache</div></div><div class="entity-actions"><div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div><div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div></div>
+            <div class="entity-card"><div class="entity-icon ei-amber"><svg viewBox="0 0 24 24"><line x1="4" y1="20" x2="4" y2="14"/><line x1="10" y1="20" x2="10" y2="10"/><line x1="16" y1="20" x2="16" y2="6"/></svg></div><div class="entity-info"><div class="entity-type">Intensity</div><div class="entity-value">7 / 10</div></div><div class="entity-actions"><div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div><div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div></div>
+            <div class="entity-card"><div class="entity-icon ei-teal"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="10" rx="5"/><line x1="12" y1="8" x2="12" y2="18"/></svg></div><div class="entity-info"><div class="entity-type">Medication taken</div><div class="entity-value">Ibuprofen</div><span class="confidence-badge cf-low">⚠️ Low confidence</span></div><div class="entity-actions"><div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div><div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div></div>
+            <div class="entity-card"><div class="entity-icon ei-blue"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></div><div class="entity-info"><div class="entity-type">Onset</div><div class="entity-value">This morning</div></div><div class="entity-actions"><div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div><div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div></div>
+          </div>
+        </div>
+        <div class="review-footer">
+          <button class="btn-secondary" onclick="showLogView('log-view-voice')">Redo</button>
+          <button class="btn-primary" onclick="showLogView('log-view-success')">Save <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button>
+        </div>
+      </div>
+
+      <div class="log-view" id="log-view-success">
+        <div class="success-body">
+          <div class="success-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h2>Saved to your record</h2>
+          <p>Your headache entry is now in your timeline.</p>
+          <div class="success-actions">
+            <button class="success-btn-primary" onclick="closeLogSheet()">Done</button>
+            <button class="success-btn-text" onclick="showLogView('log-view-choice')">Add another</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active" id="tab-home" onclick="void(0)"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+      <div class="tab" id="tab-records" onclick="openDocs()"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg><span>Records</span></div>
+      <div class="fab-wrap" onclick="openLogSheet()"><div class="fab"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div><span>Log</span></div>
+      <div class="tab" id="tab-insights"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg><span>Insights</span></div>
+      <div class="tab" id="tab-ask" onclick="switchTab('ask')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Ask</span></div>
+    </div>
+
+    <!-- Med bottom sheet — scoped to page-home -->
+    <div class="bs-overlay" id="med-bs-overlay" onclick="closeMedSheet()"></div>
+    <div class="bs-sheet" id="med-bs-sheet">
+      <div class="bs-handle"></div>
+      <div class="bs-header">
+        <div class="bs-header-left">
+          <div class="bs-med-name" id="bs-name">Lisinopril</div>
+          <div class="bs-med-dose" id="bs-dose">10 mg · per dose</div>
+          <div class="bs-badge" id="bs-badge">Upcoming</div>
+        </div>
+        <button class="bs-close" onclick="closeMedSheet()">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="bs-edit-row">
+        <div>
+          <div class="bs-time-label">Scheduled time</div>
+          <div class="bs-time-val" id="bs-time">08:00</div>
+        </div>
+        <div class="bs-stepper-wrap">
+          <div class="bs-stepper">
+            <button class="bs-stepper-btn" onclick="stepDose(-1)">−</button>
+            <div class="bs-stepper-val" id="bs-dose-val">1</div>
+            <button class="bs-stepper-btn" onclick="stepDose(1)">+</button>
+          </div>
+          <div class="bs-stepper-label" id="bs-stepper-label">pill · 10 mg each</div>
+        </div>
+      </div>
+      <div class="bs-actions">
+        <button class="bs-btn-primary" id="bs-primary-btn" onclick="markMedTaken()">Mark as Taken</button>
+        <button class="bs-btn-skip" onclick="closeMedSheet()">Skip this dose</button>
+      </div>
+      <div class="bs-footer">
+        <div class="bs-footer-row">
+          <div class="bs-pills-left" id="bs-pills">14 pills left</div>
+        </div>
+        <div class="bs-divider"></div>
+        <div class="bs-edit-link" onclick="closeMedSheet(); alert('Full schedule — coming soon')">Edit full schedule</div>
+      </div>
+    </div>
+
+  </div><!-- /page-home -->
+
+  <!-- ══════════════ LOG FLOW PAGE ══════════════ -->
+  <div class="page" id="page-log">
+
+    <!-- Choice -->
+    <div class="view active" id="view-choice">
+      <div class="topbar">
+        <div class="icon-btn" onclick="closeLog()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      </div>
+      <div class="choice-body">
+        <div class="choice-intro"><h1>Add to your<br>health record</h1><p>How would you like to add it?</p></div>
+        <div class="choice-list">
+          <div class="choice-card primary" onclick="show('view-voice')">
+            <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
+            <div class="choice-text"><div class="choice-title">Speak</div><div class="choice-sub">Just talk — we'll sort it out</div></div>
+            <span class="choice-arrow">›</span>
+          </div>
+          <div class="choice-card" onclick="show('view-text')">
+            <div class="choice-icon" style="background:var(--blue-light)"><svg viewBox="0 0 24 24" stroke="#378ADD"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div>
+            <div class="choice-text"><div class="choice-title">Type</div><div class="choice-sub">Write it out yourself</div></div>
+            <span class="choice-arrow">›</span>
+          </div>
+          <div class="choice-card" onclick="alert('Camera / file picker for PDF')">
+            <div class="choice-icon" style="background:var(--purple-light)"><svg viewBox="0 0 24 24" stroke="#7F77DD"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="choice-text"><div class="choice-title">Photo or document</div><div class="choice-sub">Scan a lab result or prescription</div></div>
+            <span class="choice-arrow">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voice -->
+    <div class="view" id="view-voice">
+      <div class="topbar">
+        <div class="icon-btn" onclick="show('view-choice'); resetVoice();"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+        <div class="topbar-title">Listening</div>
+        <div style="width:38px"></div>
+      </div>
+      <div class="voice-body">
+        <div class="voice-transcript" id="transcript">
+          <div class="transcript-placeholder" id="placeholder">Tell me what's going on —<br>symptoms, how you feel,<br>or anything health-related.</div>
+          <div class="transcript-text" id="live-text" style="display:none"></div>
+        </div>
+        <div class="voice-controls">
+          <div class="waveform">
+            <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          </div>
+          <div class="voice-actions">
+            <div class="switch-text-btn" onclick="show('view-text')"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Type</div>
+            <div class="done-btn" onclick="show('view-review')"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="voice-hint">Tap ✓ when you're done speaking</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="view" id="view-text">
+      <div class="topbar">
+        <div class="icon-btn" onclick="show('view-choice')"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+        <div class="topbar-title">Write it down</div>
+        <div style="width:38px"></div>
+      </div>
+      <div class="text-body">
+        <textarea class="text-area" placeholder="e.g. I've had a headache since this morning, about 7 out of 10, took ibuprofen around 9am..."></textarea>
+      </div>
+      <div class="review-footer">
+        <button class="btn-primary" onclick="show('view-review')">Analyze
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Review -->
+    <div class="view" id="view-review">
+      <div class="topbar">
+        <div class="icon-btn" onclick="show('view-voice')"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+        <div class="topbar-title">Review</div>
+        <div style="width:38px"></div>
+      </div>
+      <div class="review-body">
+        <div class="review-intro"><h2>Here's what I caught</h2><p>Check each item before saving. Tap to edit or remove.</p></div>
+        <div class="transcript-quote">"I've had a headache since this morning, about 7 out of 10, took ibuprofen around 9am. Feels worse when I move."</div>
+        <div class="entity-label">Detected · 4 items</div>
+        <div class="entity-list">
+          <div class="entity-card">
+            <div class="entity-icon ei-red"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+            <div class="entity-info"><div class="entity-type">Symptom</div><div class="entity-value">Headache</div></div>
+            <div class="entity-actions">
+              <div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div>
+              <div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+            </div>
+          </div>
+          <div class="entity-card">
+            <div class="entity-icon ei-amber"><svg viewBox="0 0 24 24"><line x1="4" y1="20" x2="4" y2="14"/><line x1="10" y1="20" x2="10" y2="10"/><line x1="16" y1="20" x2="16" y2="6"/><line x1="22" y1="20" x2="22" y2="12" transform="translate(-2 0)"/></svg></div>
+            <div class="entity-info"><div class="entity-type">Intensity</div><div class="entity-value">7 / 10</div></div>
+            <div class="entity-actions">
+              <div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div>
+              <div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+            </div>
+          </div>
+          <div class="entity-card">
+            <div class="entity-icon ei-teal"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="10" rx="5"/><line x1="12" y1="8" x2="12" y2="18"/></svg></div>
+            <div class="entity-info"><div class="entity-type">Medication taken</div><div class="entity-value">Ibuprofen</div><span class="confidence-badge cf-low">⚠️ Low confidence — please confirm</span></div>
+            <div class="entity-actions">
+              <div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div>
+              <div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+            </div>
+          </div>
+          <div class="entity-card">
+            <div class="entity-icon ei-blue"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></div>
+            <div class="entity-info"><div class="entity-type">Onset</div><div class="entity-value">This morning</div></div>
+            <div class="entity-actions">
+              <div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div>
+              <div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+            </div>
+          </div>
+        </div>
+        <button class="add-entity-btn" onclick="addEntity()"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add something I missed</button>
+      </div>
+      <div class="review-footer">
+        <button class="btn-secondary" onclick="show('view-voice')">Redo</button>
+        <button class="btn-primary" onclick="show('view-success')">Save to record
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Success -->
+    <div class="view" id="view-success">
+      <div class="success-body">
+        <div class="success-circle"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h2>Saved to your record</h2>
+        <p>Your headache entry is now in your timeline and linked to today.</p>
+        <div class="success-actions">
+          <button class="success-btn-primary" onclick="closeLog()">Done</button>
+          <button class="success-btn-text" onclick="show('view-choice')">Add another</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ══════════════ DOCUMENTS PAGE ══════════════ -->
+  <div class="page" id="page-docs">
+    <!-- ══════════════ LIST ══════════════ -->
+  <div class="view active" id="view-list">
+    <div class="list-screen">
+      <div class="page-title">Records</div>
+
+      <!-- Upload block -->
+      <div class="upload-block" id="upload-trigger" onclick="startProcessing()">
+        <div class="upload-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="upload-text">
+          <div class="upload-title">Add a document</div>
+          <div class="upload-sub">Lab result, prescription, or any medical doc</div>
+        </div>
+        <div class="upload-methods">
+          <div class="upload-method"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>PDF</div>
+          <div class="upload-method"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo</div>
+        </div>
+      </div>
+
+      <!-- Processing inline (replaces upload-block visually) -->
+      <div class="upload-processing" id="upload-processing"></div>
+
+      <!-- Processing card (hidden initially) -->
+      <div id="processing-container"></div>
+
+      <!-- Search + filters -->
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#A8A8A2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Search records, labs, symptoms..." oninput="filterDocs()">
+        <span class="search-clear" id="search-clear" onclick="clearSearch()">✕</span>
+      </div>
+      <div class="filter-chips">
+        <div class="chip active" data-filter="all" onclick="setFilter(this)">All</div>
+        <div class="chip" data-filter="lab" onclick="setFilter(this)"><svg viewBox="0 0 24 24"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>Lab results</div>
+        <div class="chip" data-filter="visit" onclick="setFilter(this)"><svg viewBox="0 0 24 24"><path d="M19 8h-1V3H6v5H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>Visits</div>
+        <div class="chip" data-filter="rx" onclick="setFilter(this)"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="10" rx="5"/><line x1="12" y1="8" x2="12" y2="18"/></svg>Prescriptions</div>
+        <div class="chip" data-filter="vac" onclick="setFilter(this)"><svg viewBox="0 0 24 24"><path d="M18 2l4 4"/><path d="M20 4L9 15l-4 1 1-4L17 1z"/><path d="M3 21l4-4"/></svg>Vaccines</div>
+        <div class="chip" data-filter="symptom" onclick="setFilter(this)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>Symptoms</div>
+      </div>
+
+      <!-- Records timeline -->
+
+      <div class="doc-list" id="doc-list">
+
+        <div class="month-header" data-month>June 2024</div>
+
+        <div class="doc-card" data-type="lab" data-month="June 2024" data-search="general blood test city lab hemoglobin glucose cholesterol leukocytes platelets creatinine" onclick="showDoc('view-detail')">
+          <div class="doc-thumb dt-lab"><svg viewBox="0 0 24 24"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/><line x1="7" y1="14" x2="17" y2="14"/></svg></div>
+          <div class="doc-info">
+            <div class="doc-name">General blood test</div>
+            <div class="doc-meta">City Lab · June 10</div>
+            <div class="doc-status"><span class="status-pill sp-review">⚠️ 2 to confirm</span></div>
+          </div>
+          <span class="doc-arrow">›</span>
+        </div>
+
+        <div class="month-header" data-month>May 2024</div>
+
+        <div class="doc-card" data-type="visit" data-month="May 2024" data-search="cardiology consultation dr kovalenko heart blood pressure">
+          <div class="doc-thumb dt-visit"><svg viewBox="0 0 24 24"><path d="M19 8h-1V3H6v5H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg></div>
+          <div class="doc-info">
+            <div class="doc-name">Cardiology consultation</div>
+            <div class="doc-meta">Dr. Kovalenko · May 28</div>
+            <div class="doc-status"><span class="status-pill sp-ok">✓ Confirmed</span></div>
+          </div>
+          <span class="doc-arrow">›</span>
+        </div>
+
+        <div class="doc-card" data-type="symptom" data-month="May 2024" data-search="headache symptom voice log pain intensity ibuprofen">
+          <div class="doc-thumb dt-symptom"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+          <div class="doc-info">
+            <div class="doc-name">Headache · 7/10</div>
+            <div class="doc-meta">Voice log · May 21</div>
+            <div class="doc-status"><span class="status-pill sp-log">Logged by you</span></div>
+          </div>
+          <span class="doc-arrow">›</span>
+        </div>
+
+        <div class="month-header" data-month>March 2024</div>
+
+        <div class="doc-card" data-type="rx" data-month="March 2024" data-search="prescription lisinopril city clinic medication blood pressure">
+          <div class="doc-thumb dt-rx"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="10" rx="5"/><line x1="12" y1="8" x2="12" y2="18"/></svg></div>
+          <div class="doc-info">
+            <div class="doc-name">Prescription — Lisinopril</div>
+            <div class="doc-meta">City Clinic · March 15</div>
+            <div class="doc-status"><span class="status-pill sp-ok">✓ Confirmed</span></div>
+          </div>
+          <span class="doc-arrow">›</span>
+        </div>
+
+        <div class="month-header" data-month>February 2024</div>
+
+        <div class="doc-card" data-type="lab" data-month="February 2024" data-search="lipid panel medlab cholesterol triglycerides ldl hdl">
+          <div class="doc-thumb dt-lab"><svg viewBox="0 0 24 24"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/><line x1="7" y1="14" x2="17" y2="14"/></svg></div>
+          <div class="doc-info">
+            <div class="doc-name">Lipid panel</div>
+            <div class="doc-meta">MedLab · Feb 2</div>
+            <div class="doc-status"><span class="status-pill sp-ok">✓ Confirmed</span></div>
+          </div>
+          <span class="doc-arrow">›</span>
+        </div>
+
+        <div class="month-header" data-month>November 2023</div>
+
+        <div class="doc-card" data-type="vac" data-month="November 2023" data-search="vaccination record family clinic covid flu tetanus immunization">
+          <div class="doc-thumb dt-vac"><svg viewBox="0 0 24 24"><path d="M18 2l4 4"/><path d="M17 7l-1.5-1.5"/><path d="M20 4L9 15l-4 1 1-4L17 1z" transform="translate(-1 1)"/><path d="M3 21l4-4"/></svg></div>
+          <div class="doc-info">
+            <div class="doc-name">Vaccination record</div>
+            <div class="doc-meta">Family Clinic · Nov 20</div>
+            <div class="doc-status"><span class="status-pill sp-ok">✓ Confirmed</span></div>
+          </div>
+          <span class="doc-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="no-results" id="no-results" style="display:none">
+        <div style="opacity:0.5"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#ABA99F" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <div>No documents found</div>
+        <div class="nr-sub">Try a different search or filter</div>
+      </div>
+
+      <div class="demo-hint">Tap upload to see processing · or tap top doc to view detail</div>
+    </div>
+
+  </div>
+
+  
+    
+  <div class="view" id="view-detail">
+    <div class="topbar">
+      <div class="icon-btn" onclick="showDoc('view-list')"><svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></div>
+      <div class="topbar-title">Document</div>
+      <div class="icon-btn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+    </div>
+    <div class="detail-screen">
+
+      <!-- Header -->
+      <div class="detail-header">
+        <div class="dh-top">
+          <div class="dh-thumb"><svg viewBox="0 0 24 24"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/><line x1="7" y1="14" x2="17" y2="14"/></svg></div>
+          <div class="dh-info">
+            <div class="dh-type">Lab result</div>
+            <div class="dh-name">General blood test</div>
+            <div class="dh-meta">City Lab · June 10, 2024</div>
+          </div>
+        </div>
+        <button class="dh-view-btn">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          View original PDF
+        </button>
+      </div>
+
+      <!-- AI summary -->
+      <div class="ai-summary">
+        <div class="ai-summary-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7F77DD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2-6.4-4.8L5.6 21l2.4-7.2-6-4.8h7.6z"/></svg>
+          AI summary
+        </div>
+        <div class="ai-summary-text">A routine complete blood count. Most values are normal, but hemoglobin is slightly below range and glucose is mildly elevated — worth keeping an eye on.</div>
+      </div>
+
+      <!-- Compact legend (collapsible) -->
+      <div class="legend-compact" id="legend">
+        <div class="legend-head" onclick="document.getElementById('legend').classList.toggle('open')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6B6B66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span>What do the colours and ⚠️ mean?</span>
+          <span class="legend-chevron">⌄</span>
+        </div>
+        <div class="legend-content">
+          <div class="legend-row"><span class="lb vs-normal"></span><span><strong>Green</strong> — value is within the normal range</span></div>
+          <div class="legend-row"><span class="lb vs-high"></span><span><strong>Amber</strong> — mildly outside the normal range</span></div>
+          <div class="legend-row"><span class="lb vs-low"></span><span><strong>Red</strong> — well outside the normal range</span></div>
+          <div class="legend-row"><span class="warn-flag" style="flex-shrink:0">⚠️ confirm</span><span>AI wasn't sure it read the number right — tap to verify against the original</span></div>
+        </div>
+      </div>
+
+      <!-- Review needed banner -->
+      <div class="review-banner" id="review-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#BA7517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span><strong id="confirm-count">2</strong> values need confirming — the AI wasn't fully sure it read them right.</span>
+      </div>
+
+      <!-- Extracted values -->
+      <div class="slabel" style="padding:0;">Extracted values · 6</div>
+      <div class="values-card">
+
+        <!-- (1) Out of range + low confidence → red bar + confirm -->
+        <div class="value-row" onclick="toggleCrop('crop1')">
+          <div class="val-status-bar vs-low"></div>
+          <div class="val-info">
+            <div class="val-name">Hemoglobin <span class="warn-flag">⚠️ confirm</span></div>
+            <div class="val-range">Ref: 13.0–17.0 g/dL · below range</div>
+            <div class="val-src"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Page 1 · tap to verify</div>
+          </div>
+          <div class="val-right"><div class="val-value low">12.4</div></div>
+        </div>
+        <div class="crop-row" id="crop1">
+          <div class="crop-label">The AI read it as 12.4, but the scan was a little blurry here:</div>
+          <div class="crop-image"><span>Hemoglobin (HGB)</span><span class="hl">12.4 g/dL</span></div>
+          <div class="crop-actions">
+            <button class="crop-btn confirm" onclick="confirmCrop('crop1', event)">✓ Yes, 12.4 is correct</button>
+            <button class="crop-btn edit" onclick="startEdit('crop1', '12.4', 'g/dL', event)">Edit value</button>
+          </div>
+        </div>
+
+        <!-- (2) Normal + low confidence → green bar BUT still confirm -->
+        <div class="value-row" onclick="toggleCrop('crop2')">
+          <div class="val-status-bar vs-normal"></div>
+          <div class="val-info">
+            <div class="val-name">Creatinine <span class="warn-flag">⚠️ confirm</span></div>
+            <div class="val-range">Ref: 62–106 µmol/L · within range</div>
+            <div class="val-src"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>Page 2 · handwritten · tap to verify</div>
+          </div>
+          <div class="val-right"><div class="val-value">88</div></div>
+        </div>
+        <div class="crop-row" id="crop2">
+          <div class="crop-label">This was handwritten — the AI guessed 88, but please double-check:</div>
+          <div class="crop-image"><span>Creatinine</span><span class="hl">88 µmol/L</span></div>
+          <div class="crop-actions">
+            <button class="crop-btn confirm" onclick="confirmCrop('crop2', event)">✓ Yes, 88 is correct</button>
+            <button class="crop-btn edit" onclick="startEdit('crop2', '88', 'µmol/L', event)">Edit value</button>
+          </div>
+        </div>
+
+        <!-- (3) Out of range + high confidence → amber bar, NO confirm -->
+        <div class="value-row">
+          <div class="val-status-bar vs-high"></div>
+          <div class="val-info">
+            <div class="val-name">Glucose</div>
+            <div class="val-range">Ref: 3.9–5.6 mmol/L · above range</div>
+          </div>
+          <div class="val-right"><div class="val-value high">6.1</div></div>
+        </div>
+
+        <!-- (4) Normal + high confidence → green bar, nothing -->
+        <div class="value-row">
+          <div class="val-status-bar vs-normal"></div>
+          <div class="val-info"><div class="val-name">Leukocytes</div><div class="val-range">Ref: 4.0–9.0 ×10⁹/L · within range</div></div>
+          <div class="val-right"><div class="val-value">6.8</div></div>
+        </div>
+        <div class="value-row">
+          <div class="val-status-bar vs-normal"></div>
+          <div class="val-info"><div class="val-name">Platelets</div><div class="val-range">Ref: 150–400 ×10⁹/L · within range</div></div>
+          <div class="val-right"><div class="val-value">280</div></div>
+        </div>
+        <div class="value-row">
+          <div class="val-status-bar vs-normal"></div>
+          <div class="val-info"><div class="val-name">Cholesterol</div><div class="val-range">Ref: &lt; 5.2 mmol/L · within range</div></div>
+          <div class="val-right"><div class="val-value">4.8</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab" id="docs-tab-home" onclick="switchTab('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+    <div class="tab active" id="docs-tab-records"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg><span>Records</span></div>
+    <div class="fab-wrap" onclick="openLogSheet()"><div class="fab"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div><span>Log</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg><span>Insights</span></div>
+    <div class="tab" onclick="switchTab('ask')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Ask</span></div>
+  </div>
+
+</div><!-- /page-docs -->
+
+  <!-- ══════════════ MEDICATION DETAIL PAGE ══════════════ -->
+  <div class="page-med" id="page-med">
+    <div class="med-detail-bar">
+      <div class="icon-btn" onclick="closeMedDetail()">
+        <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </div>
+      <div class="med-detail-title" id="med-detail-title">Medication</div>
+      <div class="med-detail-edit" onclick="alert('Edit flow — coming soon')">Edit</div>
+    </div>
+    <div class="med-detail-scroll">
+
+      <!-- Hero -->
+      <div class="med-hero">
+        <div class="med-hero-ico">
+          <svg viewBox="0 0 24 24"><path d="M10.5 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v7"/><path d="m15 19 3 3 5-5"/></svg>
+        </div>
+        <div class="med-hero-info">
+          <div class="med-hero-name" id="med-hero-name">Lisinopril</div>
+          <div class="med-hero-dose" id="med-hero-dose">10 mg · per dose</div>
+        </div>
+        <div class="med-status-badge">Active</div>
+      </div>
+
+      <!-- Schedule -->
+      <div class="med-section">
+        <div class="med-section-title">Schedule</div>
+        <div class="med-row">
+          <div class="med-row-label">Frequency</div>
+          <div class="med-row-val" id="med-freq">Once a day</div>
+        </div>
+        <div class="med-row">
+          <div class="med-row-label">With food</div>
+          <div class="med-row-val">Not required</div>
+        </div>
+      </div>
+
+      <!-- Times -->
+      <div class="med-section">
+        <div class="med-section-title">Times</div>
+        <div class="med-schedule-time" id="med-times-container">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- Course -->
+      <div class="med-section">
+        <div class="med-section-title">Course</div>
+        <div class="med-row">
+          <div class="med-row-label">Start date</div>
+          <div class="med-row-val" id="med-start">—</div>
+        </div>
+        <div class="med-row">
+          <div class="med-row-label">End date</div>
+          <div class="med-row-val" id="med-end">—</div>
+        </div>
+        <div class="med-row">
+          <div class="med-row-label">Duration</div>
+          <div class="med-row-val" id="med-duration">Ongoing</div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="med-section">
+        <div class="med-section-title">Recent history</div>
+        <div id="med-history-list">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <button class="med-stop-btn" onclick="alert('Stop course — confirmation dialog coming')">Stop course</button>
+
+    </div>
+  </div>
+
+<!-- ══════════════ ASK PAGE ══════════════ -->
+<div class="page" id="page-ask">
+  <div style="flex-shrink:0;padding:16px 22px 10px;display:flex;align-items:center;justify-content:space-between;background:var(--bg)">
+    <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-.4px">Ask</div>
+    <div style="width:34px;height:34px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+  </div>
+  <div style="flex-shrink:0;padding:0 22px 10px;display:flex;gap:10px;overflow-x:auto;scrollbar-width:none">
+    <div id="ask-insight-sleep" onclick="onSleepInsight()" style="flex-shrink:0;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);padding:12px 14px;min-width:200px;cursor:pointer;max-height:120px">
+      <div style="font-size:16px;margin-bottom:5px">💡</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:8px">You slept 15% better this week</div>
+      <div style="font-size:12px;font-weight:600;color:var(--teal)">Tell me more →</div>
+    </div>
+  </div>
+  <div id="ask-chat" style="flex:1;overflow-y:auto;padding:0 16px 120px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;background:rgba(242,241,236,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:10px 14px 28px;display:flex;align-items:center;gap:8px;z-index:10">
+    <input id="ask-input" type="text" placeholder="Ask about your health, symptoms, or records…" onkeydown="if(event.key==='Enter')askSend()" style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:10px 14px;font-size:13px;font-family:inherit;color:var(--text);outline:none">
+    <div onclick="alert('Voice — coming soon')" style="width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text2)" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+    </div>
+    <button onclick="askSend()" style="width:36px;height:36px;border-radius:50%;background:var(--teal);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="white" stroke="none"/></svg>
+    </button>
+  </div>
+  <div class="tab-bar">
+    <div class="tab" onclick="switchTab('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></div>
+    <div class="tab" onclick="switchTab('records')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg><span>Records</span></div>
+    <div class="fab-wrap" onclick="openLogSheet()"><div class="fab"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div><span>Log</span></div>
+    <div class="tab"><svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg><span>Insights</span></div>
+    <div class="tab active" id="ask-tab-ask"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>Ask</span></div>
+  </div>
+</div>
+
+<script>
+/* Home med toggle */
+function toggleMed(item) {
+  const check = item.querySelector('.med-check');
+  const name = item.querySelector('.med-name');
+  check.classList.toggle('done');
+  name.classList.toggle('taken');
+  updateProgress();
+}
+function updateProgress() {
+  const total = document.querySelectorAll('#page-home .med-item').length;
+  const done = document.querySelectorAll('#page-home .med-check.done').length;
+  const circumference = 100.5;
+  const offset = circumference - (done / total) * circumference;
+  document.getElementById('ring').setAttribute('stroke-dashoffset', offset);
+  document.getElementById('progress-label').textContent = done + ' of ' + total + ' taken';
+}
+updateProgress();
+
+/* ── Tab switching ── */
+function switchTab(tab) {
+  document.querySelectorAll('.tab[id^=tab-],.tab[id^=docs-tab-],.tab[id^=ask-tab-]').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#page-home,#page-log,#page-docs,#page-ask').forEach(p => p.classList.remove('active'));
+  if (tab === 'home') {
+    document.getElementById('tab-home').classList.add('active');
+    document.getElementById('page-home').classList.add('active');
+  } else if (tab === 'records') {
+    document.getElementById('tab-records').classList.add('active');
+    if (document.getElementById('docs-tab-records')) document.getElementById('docs-tab-records').classList.add('active');
+    document.getElementById('page-docs').classList.add('active');
+    showDoc('view-list');
+  } else if (tab === 'ask') {
+    document.getElementById('tab-ask').classList.add('active');
+    document.getElementById('ask-tab-ask').classList.add('active');
+    document.getElementById('page-ask').classList.add('active');
+  }
+}
+
+/* ── Log Bottom Sheet ── */
+function openLogSheet() {
+  showLogView('log-view-choice');
+  document.getElementById('log-bs-overlay').classList.add('open');
+  document.getElementById('log-bs').classList.add('open');
+}
+function closeLogSheet() {
+  document.getElementById('log-bs-overlay').classList.remove('open');
+  document.getElementById('log-bs').classList.remove('open');
+  setTimeout(() => showLogView('log-view-choice'), 300);
+}
+function showLogView(id) {
+  document.querySelectorAll('.log-view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'log-view-voice') startVoiceSim();
+}
+
+/* Log flow navigation (legacy page — keep for compat) */
+function openLog() { openLogSheet(); }
+function closeLog() { closeLogSheet(); }
+function show(id) {
+  const map = { 'view-choice':'log-view-choice','view-voice':'log-view-voice','view-text':'log-view-text','view-review':'log-view-review','view-success':'log-view-success' };
+  showLogView(map[id] || id);
+}
+function toggleRemove(btn) {
+  const card = btn.closest('.entity-card');
+  const value = card.querySelector('.entity-value');
+  card.classList.toggle('removed');
+  value.classList.toggle('struck');
+}
+
+/* Edit an entity value inline */
+function editEntity(btn) {
+  const card = btn.closest('.entity-card');
+  const valueEl = card.querySelector('.entity-value');
+  if (card.querySelector('.entity-edit-wrap')) return;
+  const current = valueEl.textContent.trim();
+  const info = card.querySelector('.entity-info');
+  const wrap = document.createElement('div');
+  wrap.className = 'entity-edit-wrap';
+  wrap.innerHTML = `<input class="entity-edit-input" type="text" value="${current}"><button class="entity-edit-save">Save</button>`;
+  valueEl.style.display = 'none';
+  // remove any low-confidence badge while editing
+  const badge = card.querySelector('.confidence-badge');
+  if (badge) badge.style.display = 'none';
+  info.appendChild(wrap);
+  const input = wrap.querySelector('.entity-edit-input');
+  input.focus(); input.select();
+  const save = () => {
+    const v = input.value.trim() || current;
+    valueEl.textContent = v;
+    valueEl.style.display = '';
+    if (badge) badge.remove();
+    wrap.remove();
+  };
+  wrap.querySelector('.entity-edit-save').onclick = save;
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') save(); });
+}
+
+/* Add a new entity card */
+const entityTypes = ['Symptom','Medication','Measurement','Event','Body location','Note'];
+function addEntity() {
+  const list = document.querySelector('#view-review .entity-list');
+  const card = document.createElement('div');
+  card.className = 'entity-card';
+  card.innerHTML = `
+    <div class="entity-icon ei-teal"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <div class="entity-info">
+      <select class="entity-type-select">${entityTypes.map(t=>`<option>${t}</option>`).join('')}</select>
+      <input class="entity-edit-input" type="text" placeholder="Type a value..." style="margin-top:6px">
+    </div>
+    <div class="entity-actions">
+      <div class="ent-btn remove" onclick="this.closest('.entity-card').remove()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    </div>`;
+  list.appendChild(card);
+  const input = card.querySelector('.entity-edit-input');
+  input.focus();
+  // on blur, convert to a normal display card
+  const finalize = () => {
+    const v = input.value.trim();
+    const type = card.querySelector('.entity-type-select').value;
+    if (!v) { return; }
+    card.querySelector('.entity-info').innerHTML = `<div class="entity-type">${type}</div><div class="entity-value">${v}</div>`;
+    card.querySelector('.entity-actions').innerHTML = `
+      <div class="ent-btn edit" onclick="editEntity(this)"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></div>
+      <div class="ent-btn remove" onclick="toggleRemove(this)"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>`;
+  };
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') finalize(); });
+  input.addEventListener('blur', finalize);
+}
+
+/* Live transcription simulation */
+let voiceTimer = null;
+const fullText = "I've had a headache since this morning, about 7 out of 10, took ibuprofen around 9am. Feels worse when I move.";
+function startVoiceSim() {
+  resetVoice();
+  const placeholder = document.getElementById('placeholder');
+  const liveText = document.getElementById('live-text');
+  const words = fullText.split(' ');
+  let i = 0;
+  setTimeout(() => {
+    placeholder.style.display = 'none';
+    liveText.style.display = 'block';
+    voiceTimer = setInterval(() => {
+      if (i >= words.length) {
+        clearInterval(voiceTimer);
+        liveText.innerHTML = fullText + '<span class="cursor"></span>';
+        return;
+      }
+      liveText.innerHTML = words.slice(0, i+1).join(' ') + '<span class="cursor"></span>';
+      i++;
+      const t = document.getElementById('transcript');
+      t.scrollTop = t.scrollHeight;
+    }, 220);
+  }, 600);
+}
+function resetVoice() {
+  if (voiceTimer) clearInterval(voiceTimer);
+  const placeholder = document.getElementById('placeholder');
+  const liveText = document.getElementById('live-text');
+  if (placeholder) placeholder.style.display = 'block';
+  if (liveText) { liveText.style.display = 'none'; liveText.innerHTML = ''; }
+}
+
+
+function openLogFromDocs() { openLogSheet(); }
+
+/* Documents page navigation */
+function openDocs() { switchTab('records'); showDoc('view-list'); }
+function backToHomeFromDocs() { switchTab('home'); }
+
+
+function showDoc(id) {
+  document.querySelectorAll('#page-docs .view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* Inline crop accordion */
+function toggleCrop(id) {
+  const crop = document.getElementById(id);
+  crop.classList.toggle('open');
+}
+function confirmCrop(id, e) {
+  e.stopPropagation();
+  const crop = document.getElementById(id);
+  crop.classList.remove('open');
+  // remove warn flag from row above
+  const row = crop.previousElementSibling;
+  const flag = row.querySelector('.warn-flag');
+  if (flag) flag.remove();
+  const src = row.querySelector('.val-src');
+  if (src) { src.innerHTML = '<svg viewBox="0 0 24 24" style="stroke:#1D9E75"><polyline points="20 6 9 17 4 12" fill="none" stroke-width="2"/></svg>Confirmed by you'; src.style.color = '#0F6E56'; }
+  // decrement counter
+  const remaining = document.querySelectorAll('#view-detail .warn-flag').length;
+  const banner = document.getElementById('review-banner');
+  const countEl = document.getElementById('confirm-count');
+  if (remaining === 0) {
+    banner.classList.add('resolved');
+    banner.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>All values confirmed. Everything checks out.</span>';
+  } else {
+    countEl.textContent = remaining;
+  }
+}
+
+/* Edit value inline */
+function startEdit(cropId, currentVal, unit, e) {
+  e.stopPropagation();
+  const crop = document.getElementById(cropId);
+  const actions = crop.querySelector('.crop-actions');
+  if (crop.querySelector('.edit-input-wrap')) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'edit-input-wrap';
+  wrap.innerHTML = `
+    <input type="text" class="edit-input" value="${currentVal}">
+    <span class="edit-unit">${unit}</span>
+    <button class="edit-save">Save</button>`;
+  actions.style.display = 'none';
+  actions.after(wrap);
+  const input = wrap.querySelector('.edit-input');
+  input.focus();
+  input.select();
+  wrap.querySelector('.edit-save').onclick = (ev) => {
+    ev.stopPropagation();
+    const newVal = input.value.trim() || currentVal;
+    // update the value shown in the row
+    const row = crop.previousElementSibling;
+    const valEl = row.querySelector('.val-value');
+    valEl.textContent = newVal;
+    // update crop highlight
+    const hl = crop.querySelector('.hl');
+    if (hl) hl.textContent = newVal + ' ' + unit;
+    // mark as edited and resolve
+    crop.classList.remove('open');
+    const flag = row.querySelector('.warn-flag');
+    if (flag) flag.remove();
+    const src = row.querySelector('.val-src');
+    if (src) { src.innerHTML = '<svg viewBox="0 0 24 24" style="stroke:#378ADD"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" fill="none" stroke-width="2"/></svg>Edited by you'; src.style.color = '#185FA5'; }
+    actions.style.display = 'flex';
+    wrap.remove();
+    updateBanner();
+  };
+}
+function updateBanner() {
+  const remaining = document.querySelectorAll('#view-detail .warn-flag').length;
+  const banner = document.getElementById('review-banner');
+  const countEl = document.getElementById('confirm-count');
+  if (remaining === 0) {
+    banner.classList.add('resolved');
+    banner.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>All values confirmed. Everything checks out.</span>';
+  } else if (countEl) {
+    countEl.textContent = remaining;
+  }
+}
+
+/* Medication detail */
+const medData = {
+  'Lisinopril': {
+    dose: '10 mg · per dose',
+    freq: 'Once a day',
+    times: [{ label: 'Morning', time: '08:00' }],
+    start: 'Jan 15, 2024',
+    end: '—',
+    duration: 'Ongoing',
+    history: [
+      { date: 'Today', time: '08:00', taken: true },
+      { date: 'Yesterday', time: '08:00', taken: true },
+      { date: 'June 12', time: '08:00', taken: true },
+      { date: 'June 11', time: '08:00', taken: false },
+      { date: 'June 10', time: '08:00', taken: true },
+    ]
+  },
+  'Aspirin': {
+    dose: '100 mg · per dose',
+    freq: 'Once a day',
+    times: [{ label: 'Morning', time: '08:00' }],
+    start: 'Mar 3, 2024',
+    end: '—',
+    duration: 'Ongoing',
+    history: [
+      { date: 'Today', time: '08:00', taken: false },
+      { date: 'Yesterday', time: '08:00', taken: true },
+      { date: 'June 12', time: '08:00', taken: true },
+      { date: 'June 11', time: '08:00', taken: true },
+      { date: 'June 10', time: '08:00', taken: true },
+    ]
+  },
+  'Vitamin D3': {
+    dose: '2000 IU · per dose',
+    freq: 'Once a day',
+    times: [{ label: 'Evening', time: '20:00' }],
+    start: 'Nov 1, 2023',
+    end: 'May 1, 2024',
+    duration: '6 months',
+    history: [
+      { date: 'Today', time: '20:00', taken: false },
+      { date: 'Yesterday', time: '20:00', taken: true },
+      { date: 'June 12', time: '20:00', taken: false },
+      { date: 'June 11', time: '20:00', taken: true },
+      { date: 'June 10', time: '20:00', taken: true },
+    ]
+  }
+};
+
+function openMedDetail(name) {
+  const data = medData[name] || {};
+  document.getElementById('med-detail-title').textContent = name;
+  document.getElementById('med-hero-name').textContent = name;
+  document.getElementById('med-hero-dose').textContent = data.dose || '—';
+  document.getElementById('med-freq').textContent = data.freq || '—';
+  document.getElementById('med-start').textContent = data.start || '—';
+  document.getElementById('med-end').textContent = data.end || '—';
+  document.getElementById('med-duration').textContent = data.duration || '—';
+
+  // Times
+  const timesContainer = document.getElementById('med-times-container');
+  timesContainer.innerHTML = (data.times || []).map(t => `
+    <div class="med-schedule-time">
+      <div>
+        <div class="med-time-label">${t.label}</div>
+        <div class="med-time-sub">Every day</div>
+      </div>
+      <div class="med-time-badge">${t.time}</div>
+    </div>
+  `).join('');
+
+  // History
+  const histList = document.getElementById('med-history-list');
+  histList.innerHTML = (data.history || []).map(h => `
+    <div class="med-history-row">
+      <div class="med-hist-dot ${h.taken ? 'taken' : 'missed'}"></div>
+      <div class="med-hist-info">${h.date}<span>${h.time}</span></div>
+      <div class="med-hist-status ${h.taken ? 'taken' : 'missed'}">${h.taken ? 'Taken' : 'Missed'}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('page-med').classList.add('active');
+}
+
+function closeMedDetail() {
+  document.getElementById('page-med').classList.remove('active');
+}
+
+
+let currentFilter = 'all';
+function setFilter(chip) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  currentFilter = chip.dataset.filter;
+  filterDocs();
+}
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  filterDocs();
+}
+function filterDocs() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const clear = document.getElementById('search-clear');
+  clear.classList.toggle('show', q.length > 0);
+  const cards = document.querySelectorAll('#doc-list .doc-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const matchesFilter = currentFilter === 'all' || card.dataset.type === currentFilter;
+    const matchesSearch = q === '' || card.dataset.search.includes(q) || card.querySelector('.doc-name').textContent.toLowerCase().includes(q);
+    const show = matchesFilter && matchesSearch;
+    card.style.display = show ? 'flex' : 'none';
+    if (show) visible++;
+  });
+  // Hide month headers that have no visible cards under them
+  const children = Array.from(document.querySelectorAll('#doc-list > *'));
+  children.forEach((el, i) => {
+    if (!el.classList.contains('month-header')) return;
+    let hasVisible = false;
+    for (let j = i + 1; j < children.length; j++) {
+      if (children[j].classList.contains('month-header')) break;
+      if (children[j].style.display !== 'none') { hasVisible = true; break; }
+    }
+    el.style.display = hasVisible ? 'block' : 'none';
+  });
+  document.getElementById('doc-count').textContent = visible;
+  document.getElementById('no-results').style.display = visible === 0 ? 'flex' : 'none';
+}
+
+/* Upcoming card accordion */
+function toggleUpcoming() {
+  const card = document.getElementById('upcoming-card');
+  card.classList.toggle('open');
+}
+
+function setStep(id, cls) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'proc-step ' + cls;
+}
+
+/* Processing simulation — inline inside upload area */
+function startProcessing() {
+  const trigger = document.getElementById('upload-trigger');
+  const proc = document.getElementById('upload-processing');
+
+  // hide upload button, show processing panel
+  trigger.style.display = 'none';
+  proc.classList.add('active');
+
+  proc.innerHTML = `
+    <div class="proc-top">
+      <div class="proc-thumb"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="proc-info">
+        <div class="proc-name">lab_results_june.pdf</div>
+        <div class="proc-sub" id="proc-sub">Reading your document...</div>
+      </div>
+      <div class="proc-spinner" id="proc-spinner"></div>
+    </div>
+    <div class="proc-steps">
+      <div class="proc-step done" id="step1"><div class="proc-step-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="proc-step-text">Document uploaded</div></div>
+      <div class="proc-step active" id="step2"><div class="proc-step-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="proc-step-text">Reading text &amp; tables</div></div>
+      <div class="proc-step pending" id="step3"><div class="proc-step-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="proc-step-text">Extracting lab values</div></div>
+      <div class="proc-step pending" id="step4"><div class="proc-step-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="proc-step-text">Checking against your history</div></div>
+    </div>`;
+
+  setTimeout(() => { setStep('step2','done'); setStep('step3','active'); document.getElementById('proc-sub').textContent='Extracting values...'; }, 1200);
+  setTimeout(() => { setStep('step3','done'); setStep('step4','active'); document.getElementById('proc-sub').textContent='Almost done...'; }, 2400);
+  setTimeout(() => {
+    setStep('step4','done');
+    document.getElementById('proc-sub').textContent='Ready to review';
+    const spinner = document.getElementById('proc-spinner');
+    if (spinner) spinner.outerHTML = '<div style="width:22px;height:22px;border-radius:50%;background:#1D9E75;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>';
+    proc.insertAdjacentHTML('beforeend', '<div style="margin-top:14px;text-align:center;background:#1D9E75;color:white;padding:11px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer" onclick="showDoc(\'view-detail\')">Review extracted data ›</div>');
+  }, 3600);
+}
+/* ── Med Bottom Sheet ── */
+const medSheetData = {
+  'Lisinopril':  { dose: '10 mg',   doseNum: 10,  doseUnit: 'mg',  time: '08:00', pills: '14 pills left',  status: 'taken'   },
+  'Aspirin':     { dose: '100 mg',  doseNum: 100, doseUnit: 'mg',  time: '08:00', pills: '28 pills left',  status: 'pending' },
+  'Vitamin D3':  { dose: '2000 IU', doseNum: 2000,doseUnit: 'IU', time: '20:00', pills: '60 pills left',  status: 'pending' },
+};
+let _bsDoseUnit = 'mg';
+let _bsCurrentMed = '';
+
+let _bsQty = 1;
+let _bsDosePerUnit = '';
+
+function openMedSheet(name, dose, time, status) {
+  const d = medSheetData[name] || {};
+  _bsCurrentMed = name;
+  _bsDoseUnit = d.doseUnit || 'mg';
+  _bsQty = 1;
+  _bsDosePerUnit = (d.doseNum || parseInt(dose) || 0) + ' ' + _bsDoseUnit;
+
+  document.getElementById('bs-name').textContent    = name;
+  document.getElementById('bs-dose').textContent    = (d.dose || dose) + ' · per dose';
+  document.getElementById('bs-time').textContent    = d.time || time;
+  document.getElementById('bs-pills').textContent   = d.pills || '';
+  document.getElementById('bs-dose-val').textContent = _bsQty;
+  document.getElementById('bs-stepper-label').textContent = 'pill · ' + _bsDosePerUnit + ' each';
+
+  const badge = document.getElementById('bs-badge');
+  const btn   = document.getElementById('bs-primary-btn');
+  const s = d.status || status;
+  if (s === 'taken') {
+    badge.textContent = 'Taken today';
+    badge.style.background = 'var(--teal-light)';
+    badge.style.color = 'var(--teal-dark)';
+    btn.textContent = 'Mark as Not Taken';
+    btn.style.background = 'var(--surface2)';
+    btn.style.color = 'var(--text2)';
+  } else {
+    badge.textContent = 'Upcoming';
+    badge.style.background = 'var(--amber-light)';
+    badge.style.color = 'var(--amber)';
+    btn.textContent = 'Mark as Taken';
+    btn.style.background = 'var(--teal)';
+    btn.style.color = 'white';
+  }
+
+  document.getElementById('med-bs-overlay').classList.add('open');
+  document.getElementById('med-bs-sheet').classList.add('open');
+}
+
+function closeMedSheet() {
+  document.getElementById('med-bs-overlay').classList.remove('open');
+  document.getElementById('med-bs-sheet').classList.remove('open');
+}
+
+function stepDose(dir) {
+  _bsQty = Math.max(1, _bsQty + dir);
+  document.getElementById('bs-dose-val').textContent = _bsQty;
+  document.getElementById('bs-stepper-label').textContent =
+    (_bsQty === 1 ? 'pill' : 'pills') + ' · ' + _bsDosePerUnit + ' each';
+}
+
+function markMedTaken() {
+  closeMedSheet();
+}
+
+function collapseLabCard() {
+  const wrap = document.getElementById('labs-wrap');
+  const slabel = wrap.previousElementSibling; // the "Latest lab results" slabel
+  wrap.style.opacity = '0';
+  wrap.style.maxHeight = '0';
+  wrap.style.marginBottom = '0';
+  wrap.style.paddingTop = '0';
+  wrap.style.paddingBottom = '0';
+  if (slabel) { slabel.style.transition = 'opacity 0.3s ease'; slabel.style.opacity = '0'; }
+  setTimeout(() => {
+    wrap.style.display = 'none';
+    if (slabel) slabel.style.display = 'none';
+  }, 420);
+}
+
+function switchAsk() {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-ask').classList.add('active');
+  document.querySelectorAll('.tab[id^=tab-],.tab[id^=docs-tab-]').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-ask').classList.add('active');
+  if (document.getElementById('docs-tab-ask')) document.getElementById('docs-tab-ask').classList.add('active');
+}
+
+function askChipClick(text) {
+  const inp = document.getElementById('ask-input');
+  inp.value = text;
+  askSend();
+}
+
+function askSend() {
+  const inp = document.getElementById('ask-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  askAppendMsg(text, 'user');
+  askTyping(true);
+  setTimeout(() => {
+    askTyping(false);
+    const replies = {
+      'how can i improve my sleep?': 'Try a consistent wake time, limit screens 30 min before bed, and avoid caffeine after 14:00. Your best nights followed low-screen evenings.',
+      'compare my sleep to last month': 'Last month average was 6.1h/night. This week you averaged 6.9h — a <strong>+13%</strong> improvement. Deep sleep phases also increased by 8 min on average.',
+    };
+    const key = text.toLowerCase();
+    const reply = replies[key] || 'I searched your health records for <em>"' + text + '"</em>. Try asking about lab results, medications, or recent symptoms for specific data.';
+    askAppendMsg('<div style="font-size:14px;line-height:1.5;color:var(--text)">' + reply + '</div>', 'ai');
+  }, 900);
+}
+
+function askAppendMsg(html, side) {
+  const chat = document.getElementById('ask-chat');
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;align-items:flex-end;gap:8px;' + (side === 'user' ? 'justify-content:flex-end' : 'justify-content:flex-start');
+  if (side === 'ai') {
+    row.innerHTML = '<div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--teal),var(--teal-dark));display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div><div class="ask-bubble-ai">' + html + '</div>';
+  } else {
+    row.innerHTML = '<div class="ask-bubble-user">' + html + '</div>';
+  }
+  chat.appendChild(row);
+  chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+  return row;
+}
+
+function askTyping(show) {
+  let t = document.getElementById('ask-typing');
+  if (show && !t) {
+    const chat = document.getElementById('ask-chat');
+    const row = document.createElement('div');
+    row.id = 'ask-typing';
+    row.style.cssText = 'display:flex;align-items:flex-end;gap:8px';
+    row.innerHTML = '<div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--teal),var(--teal-dark));display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div><div class="ask-bubble-ai"><span class="ask-dot"></span><span class="ask-dot"></span><span class="ask-dot"></span></div>';
+    chat.appendChild(row);
+    chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+  } else if (!show && t) { t.remove(); }
+}
+
+function onSleepInsight() {
+  const card = document.getElementById('ask-insight-sleep');
+  if (!card || card._used) return;
+  card._used = true;
+  card.style.transition = 'opacity .3s ease, transform .3s ease';
+  card.style.opacity = '0'; card.style.transform = 'scale(.95)';
+  setTimeout(() => {
+    card.style.transition = 'max-height .35s ease, padding .35s ease, margin .35s ease, border .35s ease';
+    card.style.maxHeight = '0'; card.style.overflow = 'hidden';
+    card.style.padding = '0'; card.style.margin = '0'; card.style.borderWidth = '0';
+  }, 280);
+  setTimeout(() => { askAppendMsg('Show details about my sleep this week', 'user'); }, 200);
+  setTimeout(() => { askTyping(true); }, 600);
+  setTimeout(() => {
+    askTyping(false);
+    const maxH = 92;
+    const bars = [
+      {d:'M',h:6.2,pct:77},{d:'T',h:6.8,pct:85},{d:'W',h:7.4,pct:100,best:true},{d:'T',h:7.1,pct:89},{d:'F',h:6.9,pct:86}
+    ].map(b => `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px">
+      <div style="width:100%;flex:1;display:flex;align-items:flex-end">
+        <div style="width:100%;height:${Math.round(b.pct)}%;background:${b.best?'var(--teal-dark)':'var(--teal)'};border-radius:4px 4px 2px 2px;position:relative;min-height:4px">
+          <span style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:700;color:var(--teal-dark);white-space:nowrap">${b.h.toFixed(1)}h</span>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);font-weight:600">${b.d}</div>
+    </div>`).join('');
+    const widget = `
+      <div style="font-size:14px;line-height:1.5;color:var(--text);margin-bottom:12px">Here is your sleep data for the last 5 days. Your deepest sleep was on <strong>Wednesday</strong>.</div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:14px 14px 10px;margin-bottom:12px">
+        <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px">Sleep this week</div>
+        <div style="display:flex;align-items:flex-end;gap:6px;height:${maxH}px">${bars}</div>
+      </div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px">
+        <button onclick="askChipClick('How can I improve my sleep?')" style="flex-shrink:0;font-size:12px;font-weight:600;color:var(--teal);background:var(--surface);border:1.5px solid var(--teal);border-radius:20px;padding:6px 12px;cursor:pointer;font-family:inherit">How to improve?</button>
+        <button onclick="askChipClick('Compare my sleep to last month')" style="flex-shrink:0;font-size:12px;font-weight:600;color:var(--teal);background:var(--surface);border:1.5px solid var(--teal);border-radius:20px;padding:6px 12px;cursor:pointer;font-family:inherit">Compare to last month</button>
+      </div>`;
+    askAppendMsg(widget, 'ai');
+  }, 1800);
+}
+</script>
+
+
+</div><!-- /.phone -->
+
+</body>
+</html>
