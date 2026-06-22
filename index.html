@@ -146,7 +146,7 @@ img,svg { display:block; max-width:100%; }
 /* ═══════════════════════════════════════════════
    APP BODY + PAGES
 ═══════════════════════════════════════════════ */
-.app-body { flex:1; position:relative; overflow:hidden; display:flex; flex-direction:column; }
+.app-body { flex:1; position:relative; overflow:hidden; display:flex; flex-direction:column; background:var(--color-bg-primary); }
 
 .page {
   position:absolute; inset:0;
@@ -156,6 +156,9 @@ img,svg { display:block; max-width:100%; }
 }
 .page--active { display:flex; }
 .page--overlay { z-index:var(--z-modal); padding-bottom:0; }
+#page-connects { transform:translateX(100%); transition:transform var(--duration-normal) var(--ease-default); display:flex !important; }
+#page-connects.page--active { transform:translateX(0); }
+#page-ask { padding-bottom:calc(var(--tab-bar-height-safe) + 60px); }
 
 /* ═══════════════════════════════════════════════
    NAV BAR
@@ -363,6 +366,16 @@ img,svg { display:block; max-width:100%; }
   cursor:pointer; flex-shrink:0; -webkit-tap-highlight-color:transparent;
 }
 .foryou-dismiss svg { width:7px; height:7px; stroke:var(--color-label-tertiary); fill:none; stroke-width:2.5; stroke-linecap:round; }
+
+/* ── PROFILE ROWS ── */
+.profile-row{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);}
+.profile-row:active{background:var(--color-fill-tertiary);}
+.profile-row__icon{width:32px;height:32px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.profile-row__icon svg{width:15px;height:15px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.profile-row__body{flex:1;}
+.profile-row__title{font-size:var(--text-subhead-size);color:var(--color-label-primary);}
+.profile-row__sub{font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;}
+.profile-row__chevron{width:8px;height:13px;stroke:var(--color-label-tertiary);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;}
 
 /* ── UPCOMING VISIT ── */
 .visit-card {
@@ -896,17 +909,17 @@ img,svg{display:block;max-width:100%;}
 /* Filter chips */
 .filter-row{display:flex;gap:var(--space-2);padding:0 var(--layout-gutter) var(--space-3);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(to right,transparent 0,black 8px,black calc(100% - 8px),transparent 100%);}
 .filter-row::-webkit-scrollbar{display:none;}
-.chip{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--radius-full);font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);background:var(--color-bg-grouped-secondary);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all var(--transition-fast);border:var(--border-width) solid var(--color-separator-opaque);white-space:nowrap;box-shadow:var(--shadow-sm);}
+.chip{flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:var(--radius-full);font-size:var(--text-subhead-size);font-weight:500;color:var(--color-label-secondary);background:var(--color-fill-secondary);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast),color var(--transition-fast);white-space:nowrap;}
 .chip:active{opacity:0.7;}
 .chip svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.chip--active{background:var(--color-brand-primary);color:#fff;border-color:var(--color-brand-primary);box-shadow:0 2px 8px rgba(0,122,255,0.3);}
+.chip--active{background:var(--color-brand-primary);color:#fff;}
 
 /* Doc count */
-.doc-count-row{padding:var(--space-3) var(--layout-gutter) var(--space-1);display:flex;align-items:center;justify-content:space-between;}
+.doc-count-row{padding:var(--space-2) var(--layout-gutter) var(--space-1);display:flex;align-items:center;justify-content:space-between;}
 .doc-count-text{font-size:var(--text-footnote-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.05em;}
 
 /* Upload block */
-.upload-block{margin:0;background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);border:1.5px dashed var(--color-brand-primary);display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--layout-gutter);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);width:100%;margin-bottom:var(--space-2);}
+.upload-block{margin:0;background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);border:none;display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--layout-gutter);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);width:100%;margin-bottom:var(--space-2);}
 .upload-block:active{background:var(--color-fill-tertiary);}
 .upload-icon{width:48px;height:48px;border-radius:var(--radius-md);background:rgba(0,122,255,0.10);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .upload-icon svg{width:24px;height:24px;stroke:var(--color-brand-primary);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
@@ -938,18 +951,30 @@ img,svg{display:block;max-width:100%;}
 .proc-step--pending .proc-step__text{color:var(--color-label-tertiary);}
 .proc-cta{margin-top:var(--space-3);}
 
-/* Month headers */
-.month-header{padding:var(--space-6) 0 var(--space-1);font-size:var(--text-subhead-size);font-weight:700;color:var(--color-label-primary);letter-spacing:-0.2px;}
-.month-header:first-child{padding-top:var(--space-5);}
+/* Doc list — Apple grouped style */
+.doc-list{padding:0 var(--layout-gutter) var(--space-8);display:flex;flex-direction:column;}
 
-/* Doc list */
-.doc-list{padding:0 var(--layout-gutter) var(--space-8);display:flex;flex-direction:column;gap:var(--space-2);}
+.month-header{
+  font-size:var(--text-footnote-size);font-weight:400;
+  color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.4px;
+  padding:var(--space-5) 0 var(--space-2);
+}
+.month-header:first-child{padding-top:var(--space-3);}
 
-.doc-card{background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);}
+.month-cards{background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-2);}
+
+.doc-card{
+  display:flex;align-items:center;gap:var(--space-3);
+  padding:var(--space-3) var(--space-3);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:background var(--transition-fast);
+  border-bottom:var(--border-width) solid var(--color-separator);
+}
+.doc-card:last-child{border-bottom:none;}
 .doc-card:active{background:var(--color-fill-tertiary);}
 
-.doc-thumb{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.doc-thumb svg{width:20px;height:20px;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.doc-thumb{width:34px;height:34px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.doc-thumb svg{width:16px;height:16px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .doc-thumb--lab{background:rgba(0,122,255,0.10);}      .doc-thumb--lab svg{stroke:var(--color-blue);}
 .doc-thumb--visit{background:rgba(52,199,89,0.10);}    .doc-thumb--visit svg{stroke:var(--color-green);}
 .doc-thumb--rx{background:rgba(175,82,222,0.10);}      .doc-thumb--rx svg{stroke:var(--color-purple);}
@@ -957,7 +982,7 @@ img,svg{display:block;max-width:100%;}
 .doc-thumb--symptom{background:rgba(255,149,0,0.10);}  .doc-thumb--symptom svg{stroke:var(--color-orange);}
 
 .doc-info{flex:1;min-width:0;}
-.doc-name{font-size:var(--text-subhead-size);font-weight:600;color:var(--color-label-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.doc-name{font-size:var(--text-subhead-size);font-weight:500;color:var(--color-label-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .doc-meta{font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;}
 .doc-status{display:flex;align-items:center;gap:var(--space-1);margin-top:var(--space-1);}
 .status-pill{font-size:var(--text-caption2-size);font-weight:600;padding:2px 7px;border-radius:var(--radius-full);}
@@ -978,13 +1003,12 @@ img,svg{display:block;max-width:100%;}
 /* ═══════════════════════════════════════════════
    SEARCH DRAWER
 ═══════════════════════════════════════════════ */
-.search-drawer{position:absolute;left:0;right:0;bottom:0;background:var(--color-bg-primary);z-index:var(--z-modal);border-radius:var(--radius-modal) var(--radius-modal) 0 0;box-shadow:0 -4px 40px rgba(0,0,0,0.12);transform:translateY(100%);transition:transform 380ms cubic-bezier(0.32,0.72,0,1);display:flex;flex-direction:column;overflow:hidden;max-height:90%;padding-bottom:34px;}
+.search-drawer{position:absolute;left:0;right:0;bottom:0;background:var(--color-bg-primary);z-index:var(--z-modal);border-radius:var(--radius-modal) var(--radius-modal) 0 0;box-shadow:var(--shadow-xl);transform:translateY(100%);transition:transform 380ms cubic-bezier(0.32,0.72,0,1);display:flex;flex-direction:column;overflow:hidden;max-height:90%;padding-bottom:env(safe-area-inset-bottom,34px);}
 .search-drawer--open{transform:translateY(0);}
-.sd-handle{width:36px;height:5px;background:var(--color-separator-opaque);border-radius:var(--radius-full);margin:12px auto 0;flex-shrink:0;}
-.sd-handle{width:36px;height:5px;background:var(--color-separator-opaque);border-radius:var(--radius-full);margin:12px auto 0;flex-shrink:0;}
+.sd-handle{width:36px;height:5px;background:var(--color-separator-opaque);border-radius:var(--radius-full);margin:var(--space-2) auto 0;flex-shrink:0;}
 .sd-top{flex-shrink:0;padding:var(--space-3) var(--layout-gutter) var(--space-3);display:flex;align-items:center;justify-content:space-between;}
 .sd-top-title{font-size:var(--text-headline-size);font-weight:var(--text-headline-weight);color:var(--color-label-primary);}
-.sd-cancel{font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+.sd-cancel{font-size:var(--text-body-size);font-weight:500;color:var(--color-brand-primary);cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;min-height:44px;display:flex;align-items:center;}
 .sd-search-row{flex-shrink:0;padding:0 var(--layout-gutter) var(--space-3);}
 .sd-input-wrap{background:var(--color-fill-tertiary);border-radius:var(--radius-input);height:36px;display:flex;align-items:center;gap:var(--space-2);padding:0 var(--space-3);}
 .sd-input-wrap svg{width:16px;height:16px;stroke:var(--color-label-tertiary);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;}
@@ -992,26 +1016,26 @@ img,svg{display:block;max-width:100%;}
 .sd-input-wrap input::placeholder{color:var(--color-label-tertiary);}
 .sd-scroll{flex:1;overflow-y:auto;scrollbar-width:none;}
 .sd-scroll::-webkit-scrollbar{display:none;}
-.sd-section-label{padding:var(--space-3) var(--layout-gutter) var(--space-1);font-size:10px;font-weight:700;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;}
-.sd-divider{height:var(--border-width);background:var(--color-separator-opaque);margin:var(--space-1) var(--layout-gutter) var(--space-3);}
+.sd-section-label{padding:var(--space-4) var(--layout-gutter) var(--space-2);font-size:var(--text-footnote-size);font-weight:400;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.4px;}
+.sd-divider{display:none;}
 .sd-date-range{display:flex;gap:var(--space-2);padding:0 var(--layout-gutter) var(--space-2);align-items:center;}
-.sd-date-btn{flex:1;background:var(--color-fill-tertiary);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all var(--transition-fast);border:1.5px solid var(--color-separator-opaque);box-shadow:none;}
-.sd-date-btn:active{opacity:0.7;}
-.sd-date-btn--active{border-color:var(--color-brand-primary);background:rgba(0,122,255,0.08);}
-.sd-date-btn__eyebrow{font-size:9px;font-weight:700;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;}
-.sd-date-btn__val{font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-primary);line-height:1.2;}
-.sd-date-btn__val--empty{color:var(--color-label-secondary);font-weight:400;}
+.sd-date-btn{flex:1;background:var(--color-fill-tertiary);border-radius:var(--radius-md);padding:var(--space-3);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);border:1.5px solid transparent;}
+.sd-date-btn:active{background:var(--color-fill-secondary);}
+.sd-date-btn--active{border-color:var(--color-brand-primary);background:rgba(0,122,255,0.06);}
+.sd-date-btn__eyebrow{font-size:var(--text-caption2-size);font-weight:600;color:var(--color-label-tertiary);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:3px;}
+.sd-date-btn__val{font-size:var(--text-subhead-size);font-weight:600;color:var(--color-label-primary);line-height:1.3;}
+.sd-date-btn__val--empty{color:var(--color-label-tertiary);font-weight:400;}
 .sd-date-arrow{display:flex;align-items:center;color:var(--color-label-tertiary);font-size:14px;flex-shrink:0;}
 
-/* Filter groups in drawer */
-.sd-filter-group{background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);margin:0 var(--layout-gutter);overflow:hidden;border:var(--border-width) solid var(--color-separator-opaque);}
-.sd-filter-row{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);}
+/* Filter groups in drawer — DS .list/.cell pattern */
+.sd-filter-group{background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);margin:0 var(--layout-gutter);overflow:hidden;}
+.sd-filter-row{display:flex;align-items:center;gap:var(--space-3);min-height:44px;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);}
 .sd-filter-row:last-child{border-bottom:none;}
 .sd-filter-row:active{background:var(--color-fill-tertiary);}
 .sd-filter-row--selected{background:rgba(0,122,255,0.06);}
-.sd-filter-icon{width:32px;height:32px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.sd-filter-icon svg{width:16px;height:16px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.sd-filter-name{flex:1;font-size:var(--text-body-size);color:var(--color-label-primary);}
+.sd-filter-icon{width:30px;height:30px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sd-filter-icon svg{width:15px;height:15px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.sd-filter-name{flex:1;font-size:var(--text-body-size);font-weight:var(--text-body-weight);letter-spacing:var(--text-body-tracking);color:var(--color-label-primary);}
 .sd-filter-check{width:22px;height:22px;border-radius:var(--radius-full);border:var(--border-width-md) solid var(--color-separator-opaque);display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast);flex-shrink:0;}
 .sd-filter-row--selected .sd-filter-check{background:var(--color-brand-primary);border-color:var(--color-brand-primary);}
 .sd-filter-check svg{display:none;width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
@@ -1019,7 +1043,7 @@ img,svg{display:block;max-width:100%;}
 .sd-apply-wrap{padding:var(--space-4) var(--layout-gutter) var(--space-6);}
 
 /* Calendar popup */
-.cal-popup{display:none;background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);margin:var(--space-2) var(--layout-gutter) 0;padding:var(--space-3);box-shadow:var(--shadow-md);border:var(--border-width) solid var(--color-separator);}
+.cal-popup{display:none;background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);margin:var(--space-2) var(--layout-gutter) 0;padding:var(--space-3);}
 .cal-popup--open{display:block;}
 .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-2);}
 .cal-nav{width:32px;height:32px;border-radius:var(--radius-full);background:var(--color-fill-tertiary);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
@@ -1583,11 +1607,10 @@ img,svg{display:block;max-width:100%;}
 
 /* Nav */
 .ask-nav{flex-shrink:0;height:var(--nav-bar-height);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-2);background:var(--color-bg-grouped-primary);border-bottom:var(--border-width) solid var(--color-separator);position:relative;}
-.ask-nav__title{position:absolute;left:50%;transform:translateX(-50%);font-size:var(--text-headline-size);font-weight:var(--text-headline-weight);color:var(--color-label-primary);}
-.ask-nav__badge{font-size:var(--text-caption2-size);font-weight:700;color:var(--color-label-tertiary);background:var(--color-fill-tertiary);padding:3px 10px;border-radius:var(--radius-full);}
+.ask-nav__title{position:absolute;left:50%;transform:translateX(-50%);font-size:var(--text-headline-size);font-weight:var(--text-headline-weight);letter-spacing:var(--text-headline-tracking);color:var(--color-label-primary);}
 
 /* Insight cards strip */
-.insight-strip{flex-shrink:0;display:flex;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.insight-strip{flex-shrink:0;display:flex;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:var(--color-bg-grouped-primary);}
 .insight-strip::-webkit-scrollbar{display:none;}
 
 .insight-card{flex-shrink:0;width:148px;background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);padding:var(--space-3);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform var(--duration-fast) var(--ease-out),opacity var(--duration-fast) var(--ease-out);}
@@ -1599,15 +1622,15 @@ img,svg{display:block;max-width:100%;}
 .insight-card--locked .insight-card__title{color:var(--color-label-secondary);}
 .insight-card__action{font-size:var(--text-caption2-size);font-weight:600;}
 .insight-card__lock{font-size:var(--text-caption2-size);color:var(--color-label-tertiary);}
-.insight-card--active{border:1.5px solid var(--color-brand-primary);}
+.insight-card--active{background:rgba(0,122,255,0.06);}
 
 /* Chat area */
-.ask-chat{flex:1;overflow-y:auto;padding:var(--space-3) var(--layout-gutter) 0;display:flex;flex-direction:column;gap:var(--space-4);scrollbar-width:none;}
+.ask-chat{flex:1;overflow-y:auto;padding:var(--space-3) var(--layout-gutter) 0;display:flex;flex-direction:column;gap:var(--space-4);scrollbar-width:none;background:var(--color-bg-grouped-primary);}
 .ask-chat::-webkit-scrollbar{display:none;}
 
 /* Suggestions (empty state) */
 .ask-suggestions{display:flex;flex-direction:column;gap:var(--space-2);}
-.ask-suggestion{background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:var(--shadow-sm);transition:background var(--transition-fast);}
+.ask-suggestion{background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);margin-bottom:var(--space-2);}
 .ask-suggestion:active{background:var(--color-fill-tertiary);}
 .ask-suggestion__icon{width:32px;height:32px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .ask-suggestion__icon svg{width:16px;height:16px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
@@ -1623,7 +1646,7 @@ img,svg{display:block;max-width:100%;}
 
 .ask-bubble{padding:var(--space-3) var(--space-4);border-radius:var(--radius-card);max-width:80%;font-size:var(--text-subhead-size);line-height:1.5;}
 .ask-bubble--user{background:var(--color-brand-primary);color:#fff;border-bottom-right-radius:var(--radius-xs);}
-.ask-bubble--ai{background:var(--color-bg-grouped-secondary);color:var(--color-label-primary);border-bottom-left-radius:var(--radius-xs);box-shadow:var(--shadow-sm);}
+.ask-bubble--ai{background:var(--color-bg-grouped-secondary);color:var(--color-label-primary);border-bottom-left-radius:var(--radius-xs);}
 
 /* Source badge in AI bubble */
 .ask-source{display:inline-flex;align-items:center;gap:4px;margin-top:var(--space-2);padding:3px 8px;background:rgba(0,122,255,0.10);border-radius:var(--radius-xs);font-size:var(--text-caption2-size);font-weight:600;color:var(--color-brand-primary);cursor:pointer;}
@@ -1631,17 +1654,17 @@ img,svg{display:block;max-width:100%;}
 
 /* Not found bubble */
 .ask-bubble--not-found{background:var(--color-fill-tertiary);border-bottom-left-radius:var(--radius-xs);}
-.ask-not-found-add{display:inline-flex;align-items:center;gap:4px;margin-top:var(--space-2);padding:6px 12px;background:var(--color-brand-primary);border-radius:var(--radius-button);font-size:var(--text-caption1-size);font-weight:600;color:#fff;cursor:pointer;border:none;font-family:inherit;}
+.ask-not-found-add{display:inline-flex;align-items:center;gap:4px;margin-top:var(--space-2);padding:6px 12px;background:var(--color-brand-primary);border-radius:var(--radius-button);font-size:var(--text-subhead-size);font-weight:500;color:#fff;cursor:pointer;border:none;font-family:inherit;}
 
 /* Conflict bubble */
 .ask-conflict-row{background:var(--color-bg-grouped-secondary);border-radius:var(--radius-md);padding:var(--space-3);margin-top:var(--space-2);border-left:3px solid var(--color-brand-warning);}
 .ask-conflict-val{font-size:var(--text-subhead-size);font-weight:700;color:var(--color-label-primary);}
 .ask-conflict-src{font-size:var(--text-caption2-size);color:var(--color-label-tertiary);margin-top:2px;}
-.ask-resolve-btn{display:inline-flex;align-items:center;gap:4px;margin-top:var(--space-2);padding:6px 12px;background:rgba(255,149,0,0.12);border-radius:var(--radius-button);font-size:var(--text-caption1-size);font-weight:600;color:var(--color-brand-warning);cursor:pointer;border:none;font-family:inherit;}
+.ask-resolve-btn{display:inline-flex;align-items:center;gap:4px;margin-top:var(--space-2);padding:6px 12px;background:rgba(255,149,0,0.12);border-radius:var(--radius-button);font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-warning);cursor:pointer;border:none;font-family:inherit;}
 
 /* Follow-up chips */
 .ask-chips{display:flex;gap:var(--space-2);flex-wrap:wrap;padding-top:var(--space-2);}
-.ask-chip{flex-shrink:0;padding:5px 12px;border-radius:var(--radius-full);font-size:var(--text-caption1-size);font-weight:600;color:var(--color-brand-primary);background:rgba(0,122,255,0.10);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:inherit;transition:opacity var(--transition-fast);white-space:nowrap;}
+.ask-chip{flex-shrink:0;padding:6px 14px;border-radius:var(--radius-full);font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);background:rgba(0,122,255,0.10);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:inherit;transition:opacity var(--transition-fast);white-space:nowrap;}
 .ask-chip:active{opacity:0.6;}
 
 /* Typing indicator */
@@ -1654,15 +1677,14 @@ img,svg{display:block;max-width:100%;}
 .appt-summary{background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);padding:var(--space-4);box-shadow:var(--shadow-sm);}
 .appt-summary__title{font-size:var(--text-subhead-size);font-weight:700;color:var(--color-label-primary);margin-bottom:var(--space-3);}
 .appt-summary__section{margin-bottom:var(--space-3);}
-.appt-summary__label{font-size:var(--text-caption2-size);font-weight:700;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-1);}
+.appt-summary__label{font-size:var(--text-footnote-size);font-weight:400;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:var(--space-1);}
 .appt-summary__item{font-size:var(--text-caption1-size);color:var(--color-label-primary);padding:3px 0;display:flex;gap:var(--space-2);}
 .appt-summary__item::before{content:'·';color:var(--color-brand-primary);font-weight:700;flex-shrink:0;}
-.appt-share-btn{width:100%;padding:11px;border-radius:var(--radius-button);background:var(--color-brand-primary);color:#fff;font-size:var(--text-subhead-size);font-weight:700;font-family:inherit;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent;margin-top:var(--space-3);transition:opacity var(--transition-fast);}
-.appt-share-btn:active{opacity:0.8;}
+
 
 /* Mini bar chart (sleep insight) */
 .ask-bar-chart{background:var(--color-fill-tertiary);border-radius:var(--radius-md);padding:var(--space-3) var(--space-3) var(--space-2);}
-.ask-bar-chart__label{font-size:var(--text-caption2-size);font-weight:700;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-3);}
+.ask-bar-chart__label{font-size:var(--text-footnote-size);font-weight:400;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:var(--space-3);}
 .ask-bar-chart__bars{display:flex;align-items:flex-end;gap:6px;height:80px;}
 .ask-bar{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .ask-bar__fill{width:100%;border-radius:4px 4px 2px 2px;position:relative;min-height:4px;transition:height 0.4s var(--ease-out);}
@@ -1690,7 +1712,7 @@ img,svg{display:block;max-width:100%;}
 /* ═══════════════════════════════════════════════
    INPUT BAR (pinned above tab bar)
 ═══════════════════════════════════════════════ */
-.ask-input-bar{position:absolute;bottom:var(--tab-bar-height-safe);left:0;right:0;background:rgba(255,255,255,0.94);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-top:var(--border-width) solid var(--color-separator);padding:var(--space-2) var(--layout-gutter) var(--space-3);z-index:var(--z-sticky);transition:bottom var(--duration-normal) var(--ease-out);}
+.ask-input-bar{position:absolute;bottom:var(--tab-bar-height-safe);left:0;right:0;background:var(--color-bg-grouped-primary);border-top:var(--border-width) solid var(--color-separator);padding:var(--space-2) var(--layout-gutter) var(--space-3);z-index:var(--z-sticky);transition:bottom var(--duration-normal) var(--ease-out);}
 .ask-input-row{display:flex;align-items:center;gap:var(--space-2);}
 .ask-input-wrap{flex:1;display:flex;align-items:center;background:var(--color-fill-tertiary);border-radius:var(--radius-full);padding:0 var(--space-2) 0 var(--space-4);min-height:40px;}
 .ask-input-wrap input{flex:1;font-size:var(--text-subhead-size);color:var(--color-label-primary);background:transparent;padding:10px 0;}
@@ -1698,7 +1720,7 @@ img,svg{display:block;max-width:100%;}
 .ask-input-mic{width:32px;height:32px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;transition:background var(--transition-fast);}
 .ask-input-mic:active{background:var(--color-fill-secondary);}
 .ask-input-mic svg{width:15px;height:15px;stroke:var(--color-label-tertiary);fill:none;stroke-width:2;stroke-linecap:round;}
-.ask-send-btn{width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-brand-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;box-shadow:0 2px 8px rgba(0,122,255,0.35);transition:transform var(--duration-fast) var(--ease-out);}
+.ask-send-btn{width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-brand-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;transition:transform var(--duration-fast) var(--ease-out);}
 .ask-send-btn:active{transform:scale(0.92);}
 .ask-send-btn svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
 </style>
@@ -2075,6 +2097,7 @@ img,svg{display:block;max-width:100%;}
         <div class="doc-list" id="doc-list">
 
           <div class="month-header" data-month="June 2024">June 2024</div>
+          <div class="month-cards">
           <div class="doc-card" data-type="lab" data-month="June 2024" data-search="general blood test city lab hemoglobin glucose creatinine" onclick="openDetail()">
             <div class="doc-thumb doc-thumb--lab"><svg viewBox="0 0 24 24"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/><line x1="7" y1="14" x2="17" y2="14"/></svg></div>
             <div class="doc-info">
@@ -2085,7 +2108,10 @@ img,svg{display:block;max-width:100%;}
             <div class="doc-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
 
+          </div><!-- /month-cards June -->
+
           <div class="month-header" data-month="May 2024">May 2024</div>
+          <div class="month-cards">
           <div class="doc-card" data-type="visit" data-month="May 2024" data-search="cardiology consultation dr kovalenko heart blood pressure" onclick="openDetail()">
             <div class="doc-thumb doc-thumb--visit"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
             <div class="doc-info">
@@ -2095,7 +2121,6 @@ img,svg{display:block;max-width:100%;}
             </div>
             <div class="doc-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
-
           <div class="doc-card" data-type="symptom" data-month="May 2024" data-search="headache symptom voice log pain ibuprofen" onclick="openDetail()">
             <div class="doc-thumb doc-thumb--symptom"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
             <div class="doc-info">
@@ -2105,8 +2130,10 @@ img,svg{display:block;max-width:100%;}
             </div>
             <div class="doc-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
+          </div><!-- /month-cards May -->
 
           <div class="month-header" data-month="March 2024">March 2024</div>
+          <div class="month-cards">
           <div class="doc-card" data-type="rx" data-month="March 2024" data-search="prescription lisinopril city clinic medication blood pressure" onclick="openDetail()">
             <div class="doc-thumb doc-thumb--rx"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
             <div class="doc-info">
@@ -2116,8 +2143,10 @@ img,svg{display:block;max-width:100%;}
             </div>
             <div class="doc-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
+          </div><!-- /month-cards March -->
 
           <div class="month-header" data-month="February 2024">February 2024</div>
+          <div class="month-cards">
           <div class="doc-card" data-type="lab" data-month="February 2024" data-search="lipid panel medlab cholesterol triglycerides ldl hdl" onclick="openDetail()">
             <div class="doc-thumb doc-thumb--lab"><svg viewBox="0 0 24 24"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/><line x1="7" y1="14" x2="17" y2="14"/></svg></div>
             <div class="doc-info">
@@ -2127,8 +2156,10 @@ img,svg{display:block;max-width:100%;}
             </div>
             <div class="doc-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
+          </div><!-- /month-cards February -->
 
           <div class="month-header" data-month="November 2023">November 2023</div>
+          <div class="month-cards">
           <div class="doc-card" data-type="vac" data-month="November 2023" data-search="vaccination covid flu tetanus family clinic immunization" onclick="openDetail()">
             <div class="doc-thumb doc-thumb--vac"><svg viewBox="0 0 24 24"><path d="M18 2l4 4"/><path d="M20 4L9 15l-4 1 1-4L17 1z"/><path d="M3 21l4-4"/></svg></div>
             <div class="doc-info">
@@ -2138,6 +2169,7 @@ img,svg{display:block;max-width:100%;}
             </div>
             <div class="doc-chevron"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
           </div>
+          </div><!-- /month-cards November -->
 
         </div>
 
@@ -2156,13 +2188,13 @@ img,svg{display:block;max-width:100%;}
     <!-- ══════════════════════════
          ASK PAGE
     ══════════════════════════ -->
-    <div class="page" id="page-ask" style="padding-bottom:calc(var(--tab-bar-height-safe) + 60px);">
+    <div class="page" id="page-ask" style="background:var(--color-bg-grouped-primary);">
 
       <!-- Nav -->
       <div class="ask-nav">
         <div style="width:44px"></div>
         <div class="ask-nav__title">Ask Vela</div>
-        <div class="ask-nav__badge">AI</div>
+        <div style="width:44px"></div>
       </div>
 
       <!-- Insight cards -->
@@ -2280,28 +2312,222 @@ img,svg{display:block;max-width:100%;}
     <!-- /page-ask -->
 
     <!-- ════ PROFILE PAGE ════ -->
-        <div class="page" id="page-profile">
-      <div class="nav-bar" style="background:var(--color-bg-grouped-primary);backdrop-filter:none;border-bottom:var(--border-width) solid var(--color-separator);">
-        <div style="width:44px"></div><div class="nav-bar__center">Profile</div><div style="width:44px"></div>
-      </div>
-      <div class="scroll-view" style="display:flex;align-items:center;justify-content:center;background:var(--color-bg-grouped-primary);">
-        <div style="text-align:center;padding:var(--space-8);color:var(--color-label-secondary);font-size:var(--text-subhead-size);">Coming soon</div>
-      </div>
-    </div>
-
-    <!-- ════ RECORDS OVERLAYS (search drawer · pdf review · doc detail) ════ -->
-    <!-- /page-records -->
-
-    <!-- ══════════════════════════
-         OTHER PAGES
-    ══════════════════════════ -->
-    <div class="page" id="page-ask">
-      <div class="nav-bar" style="background:var(--color-bg-grouped-primary);backdrop-filter:none;border-bottom:var(--border-width) solid var(--color-separator);"><div style="width:44px"></div><div class="nav-bar__center">Ask Vela</div><div style="width:44px"></div></div>
-      <div class="scroll-view" style="display:flex;align-items:center;justify-content:center;background:var(--color-bg-grouped-primary);"><div style="text-align:center;padding:var(--space-8);"><div style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);">Coming in Part 4</div></div></div>
-    </div>
     <div class="page" id="page-profile">
-      <div class="nav-bar" style="background:var(--color-bg-grouped-primary);backdrop-filter:none;border-bottom:var(--border-width) solid var(--color-separator);"><div style="width:44px"></div><div class="nav-bar__center">Profile</div><div style="width:44px"></div></div>
-      <div class="scroll-view" style="display:flex;align-items:center;justify-content:center;background:var(--color-bg-grouped-primary);"><div style="text-align:center;padding:var(--space-8);"><div style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);">Coming later</div></div></div>
+
+      <!-- Nav -->
+      <div style="flex-shrink:0;padding:0 var(--space-2) 0 var(--layout-gutter);background:var(--color-bg-grouped-primary);">
+        <div style="height:var(--nav-bar-height);display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-family:var(--font-display);font-size:var(--text-title1-size);font-weight:var(--text-title1-weight);color:var(--color-label-primary);">Profile</div>
+        </div>
+      </div>
+
+      <div class="scroll-view" style="background:var(--color-bg-grouped-primary);">
+
+        <!-- User card -->
+        <div style="padding:var(--space-3) var(--layout-gutter) var(--space-4);display:flex;align-items:center;gap:var(--space-4);">
+          <div style="width:64px;height:64px;border-radius:var(--radius-full);background:linear-gradient(135deg,#007AFF,#AF52DE);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span style="font-size:26px;font-weight:700;color:#fff;">М</span>
+          </div>
+          <div>
+            <div style="font-size:var(--text-title3-size,20px);font-weight:700;color:var(--color-label-primary);">Mykhailo</div>
+            <div style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);margin-top:2px;">mykhailo@gmail.com</div>
+          </div>
+          <div style="margin-left:auto;">
+            <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-brand-primary);background:rgba(0,122,255,0.10);padding:4px 10px;border-radius:var(--radius-full);">Edit</div>
+          </div>
+        </div>
+
+        <!-- SHARING -->
+        <div class="section-hdr"><div class="section-hdr__title">Sharing</div></div>
+        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div class="profile-row" onclick="openSharingSheet()">
+            <div class="profile-row__icon" style="background:rgba(52,199,89,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#34C759;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Share my data</div>
+              <div class="profile-row__sub">Invite someone to view your records</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+
+        </div>
+
+        <!-- CONNECTED APPS — single row → sub-screen -->
+        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Connected apps</div></div>
+        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div class="profile-row" onclick="openConnects()" style="cursor:pointer;">
+            <div class="profile-row__icon" style="background:rgba(0,122,255,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#007AFF;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Connected apps &amp; services</div>
+              <div class="profile-row__sub">Apple Health · 1 more available</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Notifications</div></div>
+        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(255,59,48,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Medication reminders</div>
+              <div class="profile-row__sub">On · 08:00 and 20:00</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(175,82,222,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#AF52DE;"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2-6.4-4.8L5.6 21l2.4-7.2-6-4.8h7.6z"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Insights</div>
+              <div class="profile-row__sub">On · when new patterns found</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(0,122,255,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#007AFF;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Quiet hours</div>
+              <div class="profile-row__sub">22:00 – 08:00</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- EXPORT -->
+        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Export</div></div>
+        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(255,59,48,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Doctor summary PDF</div>
+              <div class="profile-row__sub">All records · last 12 months</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(52,199,89,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#34C759;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Export all data</div>
+              <div class="profile-row__sub">CSV · full history</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- PRIVACY -->
+        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Privacy & account</div></div>
+        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(142,142,147,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#8E8E93;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Change password</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(142,142,147,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#8E8E93;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Privacy policy</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(255,59,48,0.08);">
+              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title" style="color:#FF3B30;">Delete account</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Sign out -->
+        <div style="padding:var(--space-4) var(--layout-gutter);">
+          <div style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);padding:var(--space-3) var(--layout-gutter);text-align:center;cursor:pointer;font-size:var(--text-subhead-size);font-weight:500;color:#FF3B30;">Sign out</div>
+        </div>
+
+        <!-- Version -->
+        <div style="text-align:center;padding-bottom:var(--space-8);">
+          <div style="font-size:var(--text-caption2-size);color:var(--color-label-tertiary);">Vela Health · v1.0.0</div>
+        </div>
+
+      </div>
+
+      <!-- Sharing bottom sheet -->
+      <div id="sharing-backdrop" onclick="closeSharingSheet()" style="position:absolute;inset:0;background:rgba(0,0,0,0.4);z-index:calc(var(--z-modal) - 1);opacity:0;pointer-events:none;transition:opacity 0.3s;"></div>
+      <div class="bottom-sheet" id="sharing-sheet">
+        <div class="bottom-sheet__handle"></div>
+        <div class="bottom-sheet__header">
+          <div style="font-size:var(--text-headline-size);font-weight:600;">Share my data</div>
+          <div class="icon-btn icon-btn--secondary" onclick="closeSharingSheet()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
+        </div>
+        <div class="bottom-sheet__body" style="padding-bottom:var(--space-8);">
+
+          <!-- Current shared -->
+          <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">Currently shared with</div>
+          <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
+            <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);">
+              <div style="width:36px;height:36px;border-radius:var(--radius-full);background:linear-gradient(135deg,#AF52DE,#007AFF);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-size:15px;font-weight:700;color:#fff;">A</span>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:var(--text-subhead-size);font-weight:600;color:var(--color-label-primary);">Anna Kovalenko</div>
+                <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);">Lab results only</div>
+              </div>
+              <div style="font-size:var(--text-caption1-size);font-weight:600;color:#FF3B30;cursor:pointer;">Revoke</div>
+            </div>
+          </div>
+
+          <!-- What to share -->
+          <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">Invite someone new</div>
+          <input class="med-field-input" type="email" placeholder="Email address" style="margin-bottom:var(--space-3);"/>
+
+          <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">They can see</div>
+          <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);">
+              <span style="font-size:var(--text-subhead-size);color:var(--color-label-primary);">Lab results</span>
+              <div style="width:44px;height:26px;background:#34C759;border-radius:13px;position:relative;"><div style="position:absolute;right:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;"></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);">
+              <span style="font-size:var(--text-subhead-size);color:var(--color-label-primary);">Medications</span>
+              <div style="width:44px;height:26px;background:#34C759;border-radius:13px;position:relative;"><div style="position:absolute;right:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;"></div></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--layout-gutter);">
+              <span style="font-size:var(--text-subhead-size);color:var(--color-label-primary);">Symptoms</span>
+              <div style="width:44px;height:26px;background:var(--color-fill-secondary);border-radius:13px;position:relative;"><div style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div></div>
+            </div>
+          </div>
+
+          <button class="btn btn--filled btn--full" onclick="closeSharingSheet()">Send invite</button>
+        </div>
+      </div>
+
     </div>
 
     <!-- ══════════════════════════
@@ -2603,6 +2829,107 @@ img,svg{display:block;max-width:100%;}
     </div>
 
     <!-- ══════════════════════════════════
+         CONNECTS SUB-SCREEN
+    ══════════════════════════════════ -->
+    <div class="page page--overlay" id="page-connects" style="background:var(--color-bg-grouped-primary);">
+      <!-- Nav -->
+      <div style="flex-shrink:0;height:var(--nav-bar-height);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-2);background:var(--color-bg-primary);border-bottom:var(--border-width) solid var(--color-separator);position:relative;">
+        <div onclick="closeConnects()" style="display:flex;align-items:center;gap:4px;color:var(--color-brand-primary);font-size:var(--text-body-size);min-width:44px;min-height:44px;cursor:pointer;-webkit-tap-highlight-color:transparent;">
+          <svg viewBox="0 0 24 24" width="10" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Profile
+        </div>
+        <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:var(--text-headline-size);font-weight:var(--text-headline-weight);letter-spacing:var(--text-headline-tracking);color:var(--color-label-primary);">Connected</div>
+        <div style="width:44px;"></div>
+      </div>
+
+      <div class="scroll-view" style="background:var(--color-bg-grouped-primary);">
+
+        <!-- HEALTH APPS -->
+        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Health apps</div></div>
+        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:#fff;box-shadow:var(--shadow-sm);">
+              <svg viewBox="0 0 24 24" style="fill:#000;stroke:none;width:18px;height:18px;"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Apple Health</div>
+              <div class="profile-row__sub">Weight, heart rate, sleep</div>
+            </div>
+            <div style="width:51px;height:31px;background:var(--color-brand-success);border-radius:var(--radius-full);position:relative;flex-shrink:0;">
+              <div style="position:absolute;right:2px;top:2px;width:27px;height:27px;background:#fff;border-radius:var(--radius-full);box-shadow:0 2px 4px rgba(0,0,0,0.25);"></div>
+            </div>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:#fff;box-shadow:var(--shadow-sm);">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;"><circle cx="12" cy="12" r="10" fill="#4285F4"/><path d="M12 6c1.7 0 3 .7 3.9 1.8L14 9.6C13.5 9 12.8 8.5 12 8.5c-2 0-3.5 1.6-3.5 3.5s1.5 3.5 3.5 3.5c1.6 0 2.7-.8 3.1-2H12v-2h5.3c.1.4.1.8.1 1.2 0 3-2.1 5.3-5.4 5.3C8.7 18 6 15.3 6 12s2.7-6 6-6z" fill="#fff"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Google Health Connect</div>
+              <div class="profile-row__sub">Not connected</div>
+            </div>
+            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
+          </div>
+        </div>
+
+        <!-- LABS & CLINICS -->
+        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Labs &amp; clinics</div></div>
+        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Synevo</div>
+              <div class="profile-row__sub">Not connected</div>
+            </div>
+            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Dila</div>
+              <div class="profile-row__sub">Not connected</div>
+            </div>
+            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">CityLab</div>
+              <div class="profile-row__sub">Not connected</div>
+            </div>
+            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
+          </div>
+        </div>
+
+        <!-- EMAIL SYNC -->
+        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Email sync</div></div>
+        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div class="profile-row">
+            <div class="profile-row__icon" style="background:rgba(255,149,0,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#FF9500;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Email</div>
+              <div class="profile-row__sub">Auto-import lab PDFs from inbox</div>
+            </div>
+            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Set up</div>
+          </div>
+        </div>
+
+        <div style="height:var(--space-8);"></div>
+      </div>
+    </div>
+    <!-- /page-connects -->
+
+        <!-- ══════════════════════════════════
          METRIC PICKER SHEET
     ══════════════════════════════════ -->
     <div class="sheet-overlay" id="picker-overlay" onclick="closePicker()"></div>
@@ -3452,15 +3779,14 @@ function applyFilters(q = '') {
     card.style.display = show ? 'flex' : 'none';
     if (show) vis++;
   });
-  // hide month headers with no visible cards
+  // hide month groups (header + cards wrapper) with no visible cards
   document.querySelectorAll('.month-header').forEach(hdr => {
-    let next = hdr.nextElementSibling;
-    let hasVis = false;
-    while (next && !next.classList.contains('month-header')) {
-      if (next.classList.contains('doc-card') && next.style.display !== 'none') { hasVis = true; break; }
-      next = next.nextElementSibling;
-    }
+    const monthCards = hdr.nextElementSibling;
+    if (!monthCards || !monthCards.classList.contains('month-cards')) return;
+    const hasVis = Array.from(monthCards.querySelectorAll('.doc-card'))
+      .some(c => c.style.display !== 'none');
     hdr.style.display = hasVis ? 'block' : 'none';
+    monthCards.style.display = hasVis ? 'block' : 'none';
   });
   document.getElementById('doc-count').textContent = vis;
   document.getElementById('no-results').style.display = vis === 0 ? 'flex' : 'none';
@@ -3857,7 +4183,6 @@ function buildAIBubble(reply) {
           <div class="appt-summary__item">Glucose slightly elevated</div>
           <div class="appt-summary__item">BP trending upward over 6 months</div>
         </div>
-        <button class="appt-share-btn" onclick="alert('Export as PDF — coming soon')">Share with doctor →</button>
       </div>
       ${chips}
     </div>`;
@@ -4025,7 +4350,31 @@ function closeVoiceOverlay() {
   mic.style.background = '';
 }
 
-/* ══ MED COURSE SHEET ══ */
+/* ══ SHARING SHEET ══ */
+function openConnects() {
+  const p = document.getElementById('page-connects');
+  p.style.display = 'flex';
+  requestAnimationFrame(() => p.classList.add('page--active'));
+}
+function closeConnects() {
+  const p = document.getElementById('page-connects');
+  p.classList.remove('page--active');
+  setTimeout(() => { p.style.display = 'none'; }, 300);
+}
+
+function openSharingSheet() {
+  document.getElementById('sharing-backdrop').style.opacity = '1';
+  document.getElementById('sharing-backdrop').style.pointerEvents = 'auto';
+  document.getElementById('sharing-sheet').classList.add('bottom-sheet--open');
+}
+function closeSharingSheet() {
+  document.getElementById('sharing-backdrop').style.opacity = '0';
+  document.getElementById('sharing-backdrop').style.pointerEvents = 'none';
+  document.getElementById('sharing-sheet').classList.remove('bottom-sheet--open');
+}
+function openSharedWithMe() { openSharingSheet(); }
+
+
 function openMedSheet() {
   document.getElementById('med-backdrop').style.opacity = '1';
   document.getElementById('med-backdrop').style.pointerEvents = 'auto';
