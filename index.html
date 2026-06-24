@@ -156,8 +156,6 @@ img,svg { display:block; max-width:100%; }
 }
 .page--active { display:flex; }
 .page--overlay { z-index:var(--z-modal); padding-bottom:0; }
-#page-connects { transform:translateX(100%); transition:transform var(--duration-normal) var(--ease-default); display:flex !important; }
-#page-connects.page--active { transform:translateX(0); }
 #page-ask { padding-bottom:calc(var(--tab-bar-height-safe) + 60px); }
 
 /* ═══════════════════════════════════════════════
@@ -326,11 +324,11 @@ img,svg { display:block; max-width:100%; }
 /* Section header */
 .section-hdr {
   display:flex; align-items:baseline; justify-content:space-between;
-  padding:var(--space-2) var(--layout-gutter) var(--space-2);
+  padding:var(--space-4) var(--layout-gutter) var(--space-2);
 }
 .section-hdr__title {
-  font-size:var(--text-caption1-size); font-weight:600;
-  color:var(--color-label-secondary); text-transform:uppercase; letter-spacing:0.08em;
+  font-size:var(--text-footnote-size); font-weight:600;
+  color:var(--color-label-secondary); text-transform:uppercase; letter-spacing:0.06em;
 }
 .section-hdr__action {
   font-size:var(--text-caption1-size); font-weight:600;
@@ -370,12 +368,12 @@ img,svg { display:block; max-width:100%; }
 /* ── PROFILE ROWS ── */
 .profile-row{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);}
 .profile-row:active{background:var(--color-fill-tertiary);}
-.profile-row__icon{width:32px;height:32px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.profile-row__icon svg{width:15px;height:15px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.profile-row__body{flex:1;}
-.profile-row__title{font-size:var(--text-subhead-size);color:var(--color-label-primary);}
-.profile-row__sub{font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;}
-.profile-row__chevron{width:8px;height:13px;stroke:var(--color-label-tertiary);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;}
+.profile-row__icon{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.profile-row__icon svg{width:18px;height:18px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.profile-row__body{flex:1;min-width:0;}
+.profile-row__title{font-size:var(--text-body-size);color:var(--color-label-primary);}
+.profile-row__sub{font-size:var(--text-subhead-size);color:var(--color-label-secondary);margin-top:1px;}
+.profile-row__chevron{width:16px;height:16px;stroke:var(--color-label-tertiary);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
 
 /* ── UPCOMING VISIT ── */
 .visit-card {
@@ -438,19 +436,24 @@ img,svg { display:block; max-width:100%; }
   cursor:pointer; -webkit-tap-highlight-color:transparent;
   transition:transform var(--duration-instant) var(--ease-out);
   position:relative; overflow:hidden;
-  display:flex; flex-direction:column; justify-content:space-between; min-height:80px;
+  display:flex; flex-direction:column; justify-content:space-between; min-height:88px;
 }
 .metric-card:active { transform:scale(0.97); }
 
-.metric-card__head { display:flex; align-items:center; justify-content:flex-start; margin-bottom:var(--space-2); }
-.metric-card__icon {
-  width:26px; height:26px; border-radius:var(--radius-sm);
-  display:flex; align-items:center; justify-content:center;
+/* Top row: icon + name */
+.metric-card__head {
+  display:flex; align-items:center; gap:6px; margin-bottom:auto;
 }
-.metric-card__icon svg { width:13px; height:13px; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.metric-card__icon {
+  width:24px; height:24px; border-radius:var(--radius-sm);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.metric-card__icon svg { width:12px; height:12px; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.metric-card__label { font-size:var(--text-caption1-size); font-weight:500; color:var(--color-label-secondary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .metric-card__status-dot { display:none; }
 
-.metric-card__body { display:flex; flex-direction:column; gap:2px; }
+/* Bottom area: value + date */
+.metric-card__body { display:flex; flex-direction:column; gap:1px; padding-top:var(--space-2); }
 .metric-card__left { flex:1; min-width:0; }
 .metric-card__value {
   font-family:var(--font-display);
@@ -458,7 +461,7 @@ img,svg { display:block; max-width:100%; }
   color:var(--color-label-primary);
 }
 .metric-card__value small { font-size:12px; font-weight:500; color:var(--color-label-tertiary); letter-spacing:0; margin-left:1px; }
-.metric-card__label { font-size:var(--text-caption1-size); color:var(--color-label-secondary); margin-top:3px; }
+.metric-card__updated { font-size:10px; color:var(--color-label-tertiary); margin-top:2px; }
 .metric-card__sub { display:none; }
 .metric-card__sub--normal { display:none; }
 .metric-card__sub--high   { display:none; }
@@ -512,39 +515,45 @@ img,svg { display:block; max-width:100%; }
 
 .med-row {
   display:flex; align-items:center; gap:var(--space-3);
-  padding:var(--space-3) 0;
+  padding:var(--space-3) var(--layout-gutter);
   border-bottom:var(--border-width) solid var(--color-separator);
-  cursor:pointer; -webkit-tap-highlight-color:transparent;
-  transition:opacity var(--transition-fast);
+  background:var(--color-bg-grouped-secondary);
+  -webkit-tap-highlight-color:transparent;
 }
 .med-row:last-child { border-bottom:none; }
-.med-row:active { opacity:0.6; }
 
-.med-row__icon {
-  width:34px; height:34px; border-radius:var(--radius-md);
-  background:rgba(0,122,255,0.10);
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
-}
-.med-row__icon svg { width:16px; height:16px; stroke:var(--color-brand-primary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-.med-row__icon--taken { background:var(--color-fill-tertiary); }
-.med-row__icon--taken svg { stroke:var(--color-label-tertiary); }
+.med-row__toggle { display:none; }
 
-.med-row__body { flex:1; }
-.med-row__name { font-size:var(--text-subhead-size); font-weight:600; color:var(--color-label-primary); }
-.med-row__name--taken { color:var(--color-label-tertiary); text-decoration:line-through; text-decoration-color:var(--color-label-tertiary); }
-.med-row__meta { font-size:var(--text-caption1-size); color:var(--color-label-tertiary); margin-top:1px; }
-
+/* Blue square check left */
 .med-row__check {
   width:28px; height:28px; border-radius:var(--radius-sm);
   border:var(--border-width-md) solid var(--color-separator-opaque);
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; cursor:pointer;
   transition:all var(--transition-fast);
+  -webkit-tap-highlight-color:transparent;
 }
 .med-row__check--done {
   background:var(--color-brand-primary); border-color:var(--color-brand-primary);
 }
 .med-row__check svg { display:none; width:14px; height:14px; stroke:#fff; fill:none; stroke-width:3; stroke-linecap:round; stroke-linejoin:round; }
 .med-row__check--done svg { display:block; }
+.med-row__check:active { transform:scale(0.88); }
+
+/* Right tappable zone */
+.med-row__detail {
+  flex:1; display:flex; align-items:center; gap:var(--space-2);
+  cursor:pointer; min-height:44px;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity var(--transition-fast);
+}
+.med-row__detail:active { opacity:0.6; }
+
+.med-row__body { flex:1; }
+.med-row__name { font-size:var(--text-subhead-size); font-weight:600; color:var(--color-label-primary); }
+.med-row__name--taken { color:var(--color-label-tertiary); text-decoration:line-through; text-decoration-color:var(--color-label-tertiary); }
+.med-row__meta { font-size:var(--text-caption1-size); color:var(--color-label-tertiary); margin-top:1px; }
+.med-row__icon { display:none; }
 
 /* ═══════════════════════════════════════════════
    METRIC DETAIL PAGE (overlay)
@@ -831,6 +840,299 @@ img,svg{display:block;max-width:100%;}
 .page--active{display:flex;}
 
 /* ═══════════════════════════════════════════════
+   PROFILE DROPDOWN & MODAL
+═══════════════════════════════════════════════ */
+.profile-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 998;
+  display: none;
+}
+.profile-modal-backdrop--open { display: block; }
+
+.profile-modal {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 390px;
+  max-height: 90vh;
+  background: var(--color-bg-grouped-primary);
+  z-index: 999;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+}
+.profile-modal--open { display: flex; }
+
+/* ─── Sub-panel (slides in from right, like iOS Settings drill-down) ─── */
+.profile-subpanel {
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg-grouped-primary);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--duration-normal) var(--ease-default);
+  z-index: 10;
+}
+.profile-subpanel--open { transform: translateX(0); }
+.profile-subpanel__nav {
+  flex-shrink: 0;
+  height: var(--nav-bar-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  background: var(--color-bg-grouped-primary);
+  position: relative;
+}
+.profile-subpanel__back {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-brand-primary);
+  font-size: var(--text-body-size);
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.profile-subpanel__title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--text-headline-size);
+  font-weight: var(--text-headline-weight);
+  letter-spacing: var(--text-headline-tracking);
+  color: var(--color-label-primary);
+}
+.profile-subpanel__body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: var(--space-4);
+}
+
+
+.profile-modal__header {
+  flex-shrink: 0;
+  padding: var(--space-5) var(--layout-gutter) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-bg-grouped-primary);
+}
+
+.profile-modal__user-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.profile-modal__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #007AFF, #AF52DE);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #fff;
+  font-size: 24px;
+}
+
+.profile-modal__user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-modal__user-name {
+  font-size: var(--text-title2-size);
+  font-weight: 700;
+  letter-spacing: var(--text-title2-tracking);
+  color: var(--color-label-primary);
+}
+
+.profile-modal__user-email {
+  font-size: var(--text-subhead-size);
+  color: var(--color-label-secondary);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-modal__edit-btn {
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  background: rgba(0, 122, 255, 0.12);
+  color: var(--color-brand-primary);
+  font-size: var(--text-subhead-size);
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--transition-fast);
+}
+.profile-modal__edit-btn:active { opacity: 0.6; }
+
+.profile-modal__chevron {
+  width: 24px;
+  height: 24px;
+  color: var(--color-label-secondary);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.profile-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-2) 0 var(--space-4);
+  background: var(--color-bg-grouped-primary);
+}
+
+/* ─── Profile Modal Sections ─── */
+.profile-modal__section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-label-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 12px var(--layout-gutter) 8px;
+  background: var(--color-bg-grouped-primary);
+}
+
+.profile-modal__section {
+  background: var(--color-bg-grouped-secondary);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  margin: 0 var(--layout-gutter) 12px;
+}
+
+/* ─── Sign Out Button ─── */
+.profile-modal__signout {
+  padding: 12px var(--layout-gutter);
+  text-align: center;
+  color: var(--color-brand-danger);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--color-bg-grouped-secondary);
+  border-top: var(--border-width) solid var(--color-separator);
+  flex-shrink: 0;
+  margin: 12px var(--layout-gutter) 20px;
+  border-radius: var(--radius-card);
+}
+.profile-modal__signout:active { opacity: 0.7; }
+
+/* ─── Profile Dropdown (list in modal) ─── */
+.profile-modal__dropdown {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-normal) var(--ease-default);
+  background: var(--color-bg-grouped-primary);
+  margin: 0 var(--layout-gutter);
+}
+.profile-modal__dropdown--open {
+  grid-template-rows: 1fr;
+}
+.profile-modal__dropdown-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+.profile-modal__dropdown--open .profile-modal__dropdown-inner {
+  margin-bottom: var(--space-3);
+}
+
+.profile-modal__chevron {
+  width: 20px;
+  height: 20px;
+  stroke: var(--color-label-tertiary);
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  transition: transform var(--duration-normal) var(--ease-default);
+}
+.profile-modal__user-card--open .profile-modal__chevron {
+  transform: rotate(180deg);
+}
+
+.profile-modal__dropdown-item {
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease;
+  background: var(--color-bg-grouped-secondary);
+  border-radius: var(--radius-card);
+  margin-bottom: var(--space-2);
+}
+.profile-modal__dropdown-item:active { opacity: 0.7; }
+
+.profile-modal__dropdown-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--color-fill-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 600;
+  color: var(--color-label-primary);
+  font-size: 14px;
+}
+
+.profile-modal__dropdown-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-modal__dropdown-name {
+  font-size: var(--text-body-size);
+  font-weight: 500;
+  color: var(--color-label-primary);
+}
+
+.profile-modal__dropdown-sub {
+  font-size: var(--text-caption1-size);
+  color: var(--color-label-secondary);
+  margin-top: 2px;
+}
+
+.profile-modal__dropdown-add {
+  padding: var(--space-3);
+  text-align: center;
+  color: var(--color-brand-primary);
+  font-size: var(--text-subhead-size);
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  background: var(--color-bg-grouped-secondary);
+  border-radius: var(--radius-card);
+}
+.profile-modal__dropdown-add:active { opacity: 0.7; }
+
+@media (prefers-color-scheme: dark) {
+}
+
+/* page-health visible via tab */
+
+/* ═══════════════════════════════════════════════
    NAV BAR
 ═══════════════════════════════════════════════ */
 .nav-bar{flex-shrink:0;height:var(--nav-bar-height);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-2);background:rgba(255,255,255,0.92);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:var(--border-width) solid var(--color-separator);position:relative;}
@@ -1032,13 +1334,11 @@ img,svg{display:block;max-width:100%;}
 .sd-filter-row{display:flex;align-items:center;gap:var(--space-3);min-height:44px;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);}
 .sd-filter-row:last-child{border-bottom:none;}
 .sd-filter-row:active{background:var(--color-fill-tertiary);}
-.sd-filter-row--selected{background:rgba(0,122,255,0.06);}
 .sd-filter-icon{width:30px;height:30px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .sd-filter-icon svg{width:15px;height:15px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .sd-filter-name{flex:1;font-size:var(--text-body-size);font-weight:var(--text-body-weight);letter-spacing:var(--text-body-tracking);color:var(--color-label-primary);}
-.sd-filter-check{width:22px;height:22px;border-radius:var(--radius-full);border:var(--border-width-md) solid var(--color-separator-opaque);display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast);flex-shrink:0;}
-.sd-filter-row--selected .sd-filter-check{background:var(--color-brand-primary);border-color:var(--color-brand-primary);}
-.sd-filter-check svg{display:none;width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
+.sd-filter-check{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sd-filter-check svg{display:none;width:18px;height:18px;stroke:var(--color-brand-primary);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
 .sd-filter-row--selected .sd-filter-check svg{display:block;}
 .sd-apply-wrap{padding:var(--space-4) var(--layout-gutter) var(--space-6);}
 
@@ -1313,6 +1613,124 @@ img,svg{display:block;max-width:100%;}
 .med-freq-row{display:flex;gap:var(--space-2);flex-wrap:wrap;}
 .med-freq-btn{padding:8px 14px;border-radius:var(--radius-full);font-size:var(--text-subhead-size);font-weight:600;color:var(--color-label-secondary);background:var(--color-fill-tertiary);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all var(--transition-fast);border:var(--border-width) solid transparent;}
 .med-freq-btn--active{background:rgba(0,122,255,0.12);color:var(--color-brand-primary);border-color:rgba(0,122,255,0.20);}
+
+/* ── iOS TOGGLE ── */
+.toggle{position:relative;display:inline-block;width:51px;height:31px;flex-shrink:0;}
+.toggle input{position:absolute;opacity:0;width:0;height:0;}
+.toggle__track{position:absolute;inset:0;background:var(--color-fill-primary);border-radius:9999px;transition:background-color 200ms ease;}
+.toggle input:checked + .toggle__track{background:var(--color-brand-success);}
+.toggle__thumb{position:absolute;top:2px;left:2px;width:27px;height:27px;background:#fff;border-radius:9999px;box-shadow:0 2px 4px rgba(0,0,0,0.25);transition:transform 200ms cubic-bezier(0.34,1.56,0.64,1.00);}
+.toggle input:checked ~ .toggle__thumb{transform:translateX(20px);}
+
+/* ═══════════════════════════════════════════════
+   MEDICATION DETAIL PAGE
+═══════════════════════════════════════════════ */
+.med-detail {
+  position:absolute; inset:0; background:var(--color-bg-grouped-primary);
+  z-index:calc(var(--z-modal) + 2);
+  transform:translateX(100%);
+  transition:transform var(--duration-normal) var(--ease-default);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.med-detail--open { transform:translateX(0); }
+
+.med-detail-nav {
+  flex-shrink:0; height:var(--nav-bar-height);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 var(--space-2);
+  background:var(--color-bg-primary);
+  border-bottom:var(--border-width) solid var(--color-separator);
+  position:relative;
+}
+.med-detail-nav__center {
+  position:absolute; left:50%; transform:translateX(-50%);
+  font-size:var(--text-headline-size); font-weight:var(--text-headline-weight);
+  color:var(--color-label-primary); white-space:nowrap;
+}
+.med-detail-scroll { flex:1; overflow-y:auto; scrollbar-width:none; }
+.med-detail-scroll::-webkit-scrollbar { display:none; }
+
+/* Hero card */
+.med-hero {
+  background:var(--color-bg-grouped-secondary);
+  margin:var(--space-4) var(--layout-gutter) 0;
+  border-radius:var(--radius-card); padding:var(--space-4);
+}
+.med-hero__top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:var(--space-2); }
+.med-hero__name { font-size:var(--text-title3-size); font-weight:700; color:var(--color-label-primary); }
+.med-hero__dose { font-size:var(--text-subhead-size); color:var(--color-label-secondary); margin-top:2px; }
+.med-hero__schedule { display:flex; align-items:center; gap:var(--space-2); margin-top:var(--space-3); flex-wrap:wrap; }
+.med-hero__pill {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:5px 10px; border-radius:var(--radius-full);
+  background:var(--color-fill-tertiary);
+  font-size:var(--text-caption1-size); font-weight:600; color:var(--color-label-secondary);
+}
+.med-hero__pill svg { width:12px; height:12px; stroke:var(--color-label-secondary); fill:none; stroke-width:2; stroke-linecap:round; }
+
+/* Reminder card */
+.med-reminder-card {
+  background:var(--color-bg-grouped-secondary);
+  margin:var(--space-3) var(--layout-gutter) 0;
+  border-radius:var(--radius-card); overflow:hidden;
+}
+.med-reminder-row {
+  display:flex; align-items:center; gap:var(--space-3);
+  padding:var(--space-3) var(--layout-gutter);
+  border-bottom:var(--border-width) solid var(--color-separator);
+}
+.med-reminder-row:last-child { border-bottom:none; }
+.med-reminder-icon {
+  width:32px; height:32px; border-radius:var(--radius-md);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.med-reminder-icon svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.med-reminder-body { flex:1; }
+.med-reminder-title { font-size:var(--text-body-size); color:var(--color-label-primary); }
+.med-reminder-sub { font-size:var(--text-caption1-size); color:var(--color-label-tertiary); margin-top:1px; }
+.med-reminder-value { font-size:var(--text-subhead-size); font-weight:600; color:var(--color-brand-primary); flex-shrink:0; }
+
+/* Adherence stat */
+.med-stat-card {
+  background:var(--color-bg-grouped-secondary);
+  margin:var(--space-3) var(--layout-gutter) 0;
+  border-radius:var(--radius-card); padding:var(--space-4);
+}
+.med-stat-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--space-3); }
+.med-stat-title { font-size:var(--text-subhead-size); font-weight:600; color:var(--color-label-primary); }
+.med-stat-pct { font-size:var(--text-title2-size); font-weight:700; color:var(--color-brand-success); letter-spacing:-0.5px; }
+.med-stat-sub { font-size:var(--text-caption1-size); color:var(--color-label-tertiary); }
+.med-adherence-bar { height:6px; background:var(--color-fill-tertiary); border-radius:var(--radius-full); overflow:hidden; }
+.med-adherence-fill { height:100%; background:var(--color-brand-success); border-radius:var(--radius-full); transition:width 0.6s var(--ease-out); }
+
+/* Calendar */
+.med-cal-card {
+  background:var(--color-bg-grouped-secondary);
+  margin:var(--space-3) var(--layout-gutter) var(--space-8);
+  border-radius:var(--radius-card); padding:var(--space-4);
+}
+.med-cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--space-3); }
+.med-cal-title { font-size:var(--text-subhead-size); font-weight:600; color:var(--color-label-primary); }
+.med-cal-month { font-size:var(--text-caption1-size); color:var(--color-label-secondary); }
+.med-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.med-cal-day-name { font-size:10px; font-weight:600; color:var(--color-label-tertiary); text-align:center; padding-bottom:4px; }
+.med-cal-cell {
+  aspect-ratio:1; border-radius:var(--radius-sm);
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:500; color:var(--color-label-tertiary);
+}
+.med-cal-cell--taken { background:rgba(52,199,89,0.15); color:var(--color-brand-success); font-weight:700; }
+.med-cal-cell--missed { background:rgba(255,59,48,0.10); color:var(--color-brand-danger); font-weight:600; }
+.med-cal-cell--today  { background:var(--color-brand-primary); color:#fff; font-weight:700; }
+.med-cal-cell--future { color:var(--color-label-quaternary); }
+.med-cal-legend { display:flex; align-items:center; gap:var(--space-4); margin-top:var(--space-3); }
+.med-cal-legend-item { display:flex; align-items:center; gap:4px; font-size:var(--text-caption2-size); color:var(--color-label-secondary); }
+.med-cal-legend-dot { width:8px; height:8px; border-radius:var(--radius-full); flex-shrink:0; }
+
+/* Take now button */
+.med-take-btn {
+  margin:var(--space-4) var(--layout-gutter) 0;
+}
 .med-times-row{display:flex;gap:var(--space-2);}
 .med-time-input{flex:1;min-height:44px;padding:0 var(--space-3);background:var(--color-fill-tertiary);border-radius:var(--radius-input);border:var(--border-width) solid transparent;font-family:var(--font-sans);font-size:var(--text-body-size);color:var(--color-label-primary);outline:none;-webkit-appearance:none;appearance:none;text-align:center;}
 .med-time-input:focus{border-color:var(--color-brand-primary);background:var(--color-bg-primary);}
@@ -1387,7 +1805,7 @@ img,svg{display:block;max-width:100%;}
 .wave-bar{width:4px;background:var(--color-brand-primary);border-radius:2px;animation:wave 1s ease-in-out infinite;}
 .wave-bar:nth-child(1){animation-delay:0s;} .wave-bar:nth-child(2){animation-delay:.07s;} .wave-bar:nth-child(3){animation-delay:.14s;} .wave-bar:nth-child(4){animation-delay:.21s;} .wave-bar:nth-child(5){animation-delay:.28s;} .wave-bar:nth-child(6){animation-delay:.35s;} .wave-bar:nth-child(7){animation-delay:.28s;} .wave-bar:nth-child(8){animation-delay:.21s;} .wave-bar:nth-child(9){animation-delay:.14s;} .wave-bar:nth-child(10){animation-delay:.07s;} .wave-bar:nth-child(11){animation-delay:.14s;} .wave-bar:nth-child(12){animation-delay:.21s;} .wave-bar:nth-child(13){animation-delay:.28s;} .wave-bar:nth-child(14){animation-delay:.21s;}
 @keyframes wave{0%,100%{height:6px;}50%{height:28px;}}
-.voice-action-row{display:flex;align-items:center;justify-content:space-between;}
+.voice-action-row{display:flex;align-items:center;justify-content:center;gap:var(--space-8);}
 .voice-type-btn{display:flex;align-items:center;gap:6px;font-size:var(--text-subhead-size);font-weight:600;color:var(--color-brand-primary);cursor:pointer;-webkit-tap-highlight-color:transparent;padding:var(--space-2) 0;}
 .voice-type-btn svg{width:18px;height:18px;stroke:var(--color-brand-primary);fill:none;stroke-width:2;stroke-linecap:round;}
 .voice-done-btn{width:52px;height:52px;border-radius:var(--radius-full);background:var(--color-brand-primary);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:0 4px 12px rgba(0,122,255,0.4);transition:transform var(--duration-fast) var(--ease-out);}
@@ -1709,6 +2127,18 @@ img,svg{display:block;max-width:100%;}
 .voice-btn--cancel{background:var(--color-fill-tertiary);color:var(--color-label-secondary);border:none;}
 .voice-btn--send{background:var(--color-brand-primary);color:#fff;border:none;}
 
+/* Alt action buttons in voice view (photo, type) */
+.voice-alt-btn {
+  width:44px; height:44px; border-radius:var(--radius-full);
+  background:var(--color-fill-tertiary);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; -webkit-tap-highlight-color:transparent;
+  transition:background var(--transition-fast), transform var(--duration-instant) var(--ease-out);
+  flex-shrink:0;
+}
+.voice-alt-btn:active { background:var(--color-fill-secondary); transform:scale(0.93); }
+.voice-alt-btn svg { width:20px; height:20px; stroke:var(--color-label-secondary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
 /* ═══════════════════════════════════════════════
    INPUT BAR (pinned above tab bar)
 ═══════════════════════════════════════════════ */
@@ -1745,7 +2175,12 @@ img,svg{display:block;max-width:100%;}
       <!-- Large Title Nav -->
       <div class="home-nav">
         <div class="home-nav__top"></div>
-        <div class="home-nav__title">Vela</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div class="home-nav__title">Vela</div>
+          <button onclick="openSettingsSheet()" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent;">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:var(--color-label-primary);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </button>
+        </div>
       </div>
 
       <div class="scroll-view" style="background:var(--color-bg-grouped-primary);">
@@ -1829,51 +2264,42 @@ img,svg{display:block;max-width:100%;}
           <div class="section-hdr__action" onclick="openMedSheet()">+ Add</div>
         </div>
         <div class="meds-card">
-
-          <!-- Morning group -->
-          <div class="med-group">
-            <div class="med-row" onclick="toggleMed(this)">
-              <div class="med-row__icon med-row__icon--taken">
-                <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="4.5" transform="rotate(-45 12 12)"/></svg>
-              </div>
+          <div class="med-row" id="medrow-lisinopril">
+            <div class="med-row__check med-row__check--done" onclick="toggleMedRow('medrow-lisinopril')">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="med-row__detail" onclick="openMedDetail('Lisinopril','10 mg','1× morning','8:00 AM',true)">
               <div class="med-row__body">
                 <div class="med-row__name med-row__name--taken">Lisinopril</div>
-                <div class="med-row__meta">10 mg · Last taken 8:02 AM</div>
+                <div class="med-row__meta">10 mg · Taken 8:02 AM</div>
               </div>
-              <div class="med-row__check med-row__check--done">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
-            </div>
-            <div class="med-row" onclick="toggleMed(this)">
-              <div class="med-row__icon med-row__icon--taken">
-                <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="4.5" transform="rotate(-45 12 12)"/></svg>
-              </div>
-              <div class="med-row__body">
-                <div class="med-row__name med-row__name--taken">Aspirin</div>
-                <div class="med-row__meta">100 mg · Last taken 8:02 AM</div>
-              </div>
-              <div class="med-row__check med-row__check--done">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
+              <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
           </div>
-
-          <!-- Evening group -->
-          <div class="med-group">
-            <div class="med-row" onclick="toggleMed(this)">
-              <div class="med-row__icon">
-                <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="4.5" transform="rotate(-45 12 12)"/></svg>
+          <div class="med-row" id="medrow-aspirin">
+            <div class="med-row__check med-row__check--done" onclick="toggleMedRow('medrow-aspirin')">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="med-row__detail" onclick="openMedDetail('Aspirin','100 mg','1× morning','8:00 AM',true)">
+              <div class="med-row__body">
+                <div class="med-row__name med-row__name--taken">Aspirin</div>
+                <div class="med-row__meta">100 mg · Taken 8:02 AM</div>
               </div>
+              <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <div class="med-row" id="medrow-vitd">
+            <div class="med-row__check" onclick="toggleMedRow('medrow-vitd')">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="med-row__detail" onclick="openMedDetail('Vitamin D3','2000 IU','1× evening','8:00 PM',false)">
               <div class="med-row__body">
                 <div class="med-row__name">Vitamin D3</div>
                 <div class="med-row__meta">2000 IU · Last taken Jun 17</div>
               </div>
-              <div class="med-row__check">
-                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-              </div>
+              <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
           </div>
-
         </div>
 
         <!-- LATEST LABS -->
@@ -1989,14 +2415,172 @@ img,svg{display:block;max-width:100%;}
             </div>
           </div>
 
+          <!-- Remind me -->
+          <div class="med-field-group">
+            <div class="med-field-label">Remind me</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:var(--color-fill-tertiary);border-radius:var(--radius-input);padding:0 var(--space-3);min-height:44px;">
+              <span style="font-size:var(--text-body-size);color:var(--color-label-primary);">Daily reminder</span>
+              <label class="toggle" style="flex-shrink:0;">
+                <input type="checkbox" id="med-remind-toggle" checked onchange="toggleRemindTime(this)"/>
+                <div class="toggle__track"></div>
+                <div class="toggle__thumb"></div>
+              </label>
+            </div>
+            <div id="med-remind-time-wrap" style="margin-top:var(--space-2);">
+              <input class="med-field-input" type="time" id="med-remind-time" value="08:00"/>
+            </div>
+          </div>
+
           <!-- Save -->
           <button class="btn btn--filled btn--full" style="margin-top:var(--space-4);" onclick="saveMedCourse()">Add to my medications</button>
 
         </div>
       </div>
 
+      <!-- ── REMIND ME field in med sheet (добавляємо перед Save) ── -->
+
     </div>
     <!-- /page-home -->
+
+    <!-- ════ MEDICATION DETAIL PAGE ════ -->
+    <div class="med-detail" id="med-detail">
+      <div class="med-detail-nav">
+        <div class="icon-btn" onclick="closeMedDetail()">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <div class="med-detail-nav__center" id="mdd-title">—</div>
+        <div style="width:44px"></div>
+      </div>
+
+      <div class="med-detail-scroll">
+
+        <!-- Hero -->
+        <div class="med-hero">
+          <div class="med-hero__top">
+            <div>
+              <div class="med-hero__name" id="mdd-name">—</div>
+              <div class="med-hero__dose" id="mdd-dose">—</div>
+            </div>
+            <div id="mdd-taken-badge"></div>
+          </div>
+          <div class="med-hero__schedule">
+            <div class="med-hero__pill">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+              <span id="mdd-freq">—</span>
+            </div>
+            <div class="med-hero__pill">
+              <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span id="mdd-reminder-time">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Take now button (shown only if not taken today) -->
+        <div class="med-take-btn" id="mdd-take-wrap">
+          <button class="btn btn--filled btn--full btn--lg" onclick="markTakenFromDetail()">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Mark as taken
+          </button>
+        </div>
+
+        <!-- Reminder & Refill settings -->
+        <div style="margin:var(--space-4) var(--layout-gutter) 0;background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+
+          <div style="display:flex;align-items:center;gap:var(--space-3);min-height:52px;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);">
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);color:var(--color-label-primary);">Daily reminder</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:2px;" id="mdd-reminder-sub">8:00 AM</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" checked onchange="toggleDailyReminder(this)"/>
+              <div class="toggle__track"></div>
+              <div class="toggle__thumb"></div>
+            </label>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:var(--space-3);min-height:52px;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);">
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);color:var(--color-label-primary);">Track supply</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:2px;">Auto-decrements when taken</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="mdd-track-toggle" onchange="toggleTrackSupply(this)"/>
+              <div class="toggle__track"></div>
+              <div class="toggle__thumb"></div>
+            </label>
+          </div>
+
+          <div id="mdd-supply-row" style="display:none;align-items:center;gap:var(--space-3);min-height:52px;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background var(--transition-fast);" onclick="openSupplyPicker()">
+            <div style="flex:1;font-size:var(--text-body-size);color:var(--color-label-primary);">Current supply</div>
+            <div id="mdd-supply-val" style="font-size:var(--text-body-size);font-weight:600;color:var(--color-brand-primary);margin-right:var(--space-2);">30 pills</div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+
+          <div id="mdd-refill-row" style="display:none;align-items:center;gap:var(--space-3);min-height:52px;padding:var(--space-3) var(--layout-gutter);">
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);color:var(--color-label-primary);">Refill alert</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:2px;">Notifies when supply is running low</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="mdd-refill-toggle"/>
+              <div class="toggle__track"></div>
+              <div class="toggle__thumb"></div>
+            </label>
+          </div>
+
+        </div>
+        <div class="med-stat-card">
+          <div class="med-stat-header">
+            <div>
+              <div class="med-stat-title">This month</div>
+              <div class="med-stat-sub" id="mdd-stat-sub">18 of 21 days taken</div>
+            </div>
+            <div>
+              <div class="med-stat-pct" id="mdd-stat-pct">86%</div>
+            </div>
+          </div>
+          <div class="med-adherence-bar">
+            <div class="med-adherence-fill" id="mdd-adherence-fill" style="width:86%"></div>
+          </div>
+        </div>
+
+        <!-- Calendar -->
+        <div class="med-cal-card">
+          <div class="med-cal-header">
+            <div class="med-cal-title">June 2024</div>
+            <div class="med-cal-month">Adherence calendar</div>
+          </div>
+          <div class="med-cal-grid" id="mdd-cal-grid"></div>
+          <div class="med-cal-legend">
+            <div class="med-cal-legend-item"><div class="med-cal-legend-dot" style="background:var(--color-brand-success);"></div>Taken</div>
+            <div class="med-cal-legend-item"><div class="med-cal-legend-dot" style="background:var(--color-brand-danger);"></div>Missed</div>
+            <div class="med-cal-legend-item"><div class="med-cal-legend-dot" style="background:var(--color-fill-primary);"></div>Upcoming</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Supply picker sheet — всередині med-detail -->
+      <div class="sheet-overlay" id="supply-overlay" onclick="closeSupplyPicker()"></div>
+      <div class="bottom-sheet" id="supply-sheet" style="max-height:60%;">
+        <div class="bottom-sheet__handle"></div>
+        <div class="bottom-sheet__header">
+          <div class="bottom-sheet__title">Current supply</div>
+          <div class="nav-bar__btn" onclick="closeSupplyPicker()">Done</div>
+        </div>
+        <div class="bottom-sheet__body" style="display:flex;flex-direction:column;align-items:center;gap:var(--space-6);padding-top:var(--space-4);">
+          <p style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);text-align:center;">How many pills do you have left?</p>
+          <div style="display:flex;align-items:center;gap:var(--space-5);">
+            <button class="btn btn--gray" style="width:50px;height:50px;padding:0;border-radius:var(--radius-full);font-size:24px;font-weight:300;" onclick="changeSupply(-1)">−</button>
+            <div id="supply-count" style="font-family:var(--font-display);font-size:48px;font-weight:700;letter-spacing:-1.5px;min-width:64px;text-align:center;color:var(--color-label-primary);">30</div>
+            <button class="btn btn--gray" style="width:50px;height:50px;padding:0;border-radius:var(--radius-full);font-size:24px;font-weight:300;" onclick="changeSupply(1)">+</button>
+          </div>
+          <button class="btn btn--filled btn--full btn--lg" onclick="saveSupply()">Save</button>
+        </div>
+      </div>
+
+    </div>
+    <!-- /med-detail -->
 
     <!-- ════ RECORDS PAGE ════ -->
     <div class="page" id="page-records">
@@ -2005,6 +2589,9 @@ img,svg{display:block;max-width:100%;}
       <div class="records-nav" style="flex-shrink:0;">
         <div class="records-nav__top">
           <div class="records-nav__title">Records</div>
+          <button onclick="openSettingsSheet()" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent;">
+            <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:var(--color-label-primary);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </button>
         </div>
       </div>
 
@@ -2194,7 +2781,9 @@ img,svg{display:block;max-width:100%;}
       <div class="ask-nav">
         <div style="width:44px"></div>
         <div class="ask-nav__title">Ask Vela</div>
-        <div style="width:44px"></div>
+        <button onclick="openSettingsSheet()" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent;">
+          <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:var(--color-label-primary);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
       </div>
 
       <!-- Insight cards -->
@@ -2311,225 +2900,6 @@ img,svg{display:block;max-width:100%;}
     </div>
     <!-- /page-ask -->
 
-    <!-- ════ PROFILE PAGE ════ -->
-    <div class="page" id="page-profile">
-
-      <!-- Nav -->
-      <div style="flex-shrink:0;padding:0 var(--space-2) 0 var(--layout-gutter);background:var(--color-bg-grouped-primary);">
-        <div style="height:var(--nav-bar-height);display:flex;align-items:center;justify-content:space-between;">
-          <div style="font-family:var(--font-display);font-size:var(--text-title1-size);font-weight:var(--text-title1-weight);color:var(--color-label-primary);">Profile</div>
-        </div>
-      </div>
-
-      <div class="scroll-view" style="background:var(--color-bg-grouped-primary);">
-
-        <!-- User card -->
-        <div style="padding:var(--space-3) var(--layout-gutter) var(--space-4);display:flex;align-items:center;gap:var(--space-4);">
-          <div style="width:64px;height:64px;border-radius:var(--radius-full);background:linear-gradient(135deg,#007AFF,#AF52DE);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <span style="font-size:26px;font-weight:700;color:#fff;">М</span>
-          </div>
-          <div>
-            <div style="font-size:var(--text-title3-size,20px);font-weight:700;color:var(--color-label-primary);">Mykhailo</div>
-            <div style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);margin-top:2px;">mykhailo@gmail.com</div>
-          </div>
-          <div style="margin-left:auto;">
-            <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-brand-primary);background:rgba(0,122,255,0.10);padding:4px 10px;border-radius:var(--radius-full);">Edit</div>
-          </div>
-        </div>
-
-        <!-- SHARING -->
-        <div class="section-hdr"><div class="section-hdr__title">Sharing</div></div>
-        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
-          <div class="profile-row" onclick="openSharingSheet()">
-            <div class="profile-row__icon" style="background:rgba(52,199,89,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#34C759;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Share my data</div>
-              <div class="profile-row__sub">Invite someone to view your records</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-
-        </div>
-
-        <!-- CONNECTED APPS — single row → sub-screen -->
-        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Connected apps</div></div>
-        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
-          <div class="profile-row" onclick="openConnects()" style="cursor:pointer;">
-            <div class="profile-row__icon" style="background:rgba(0,122,255,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#007AFF;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Connected apps &amp; services</div>
-              <div class="profile-row__sub">Apple Health · 1 more available</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>
-
-        <!-- NOTIFICATIONS -->
-        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Notifications</div></div>
-        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(255,59,48,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Medication reminders</div>
-              <div class="profile-row__sub">On · 08:00 and 20:00</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(175,82,222,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#AF52DE;"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2-6.4-4.8L5.6 21l2.4-7.2-6-4.8h7.6z"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Insights</div>
-              <div class="profile-row__sub">On · when new patterns found</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(0,122,255,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#007AFF;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Quiet hours</div>
-              <div class="profile-row__sub">22:00 – 08:00</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>
-
-        <!-- EXPORT -->
-        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Export</div></div>
-        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(255,59,48,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Doctor summary PDF</div>
-              <div class="profile-row__sub">All records · last 12 months</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(52,199,89,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#34C759;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Export all data</div>
-              <div class="profile-row__sub">CSV · full history</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>
-
-        <!-- PRIVACY -->
-        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Privacy & account</div></div>
-        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(142,142,147,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#8E8E93;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Change password</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(142,142,147,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#8E8E93;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Privacy policy</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(255,59,48,0.08);">
-              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title" style="color:#FF3B30;">Delete account</div>
-            </div>
-            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </div>
-        </div>
-
-        <!-- Sign out -->
-        <div style="padding:var(--space-4) var(--layout-gutter);">
-          <div style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);padding:var(--space-3) var(--layout-gutter);text-align:center;cursor:pointer;font-size:var(--text-subhead-size);font-weight:500;color:#FF3B30;">Sign out</div>
-        </div>
-
-        <!-- Version -->
-        <div style="text-align:center;padding-bottom:var(--space-8);">
-          <div style="font-size:var(--text-caption2-size);color:var(--color-label-tertiary);">Vela Health · v1.0.0</div>
-        </div>
-
-      </div>
-
-      <!-- Sharing bottom sheet -->
-      <div id="sharing-backdrop" onclick="closeSharingSheet()" style="position:absolute;inset:0;background:rgba(0,0,0,0.4);z-index:calc(var(--z-modal) - 1);opacity:0;pointer-events:none;transition:opacity 0.3s;"></div>
-      <div class="bottom-sheet" id="sharing-sheet">
-        <div class="bottom-sheet__handle"></div>
-        <div class="bottom-sheet__header">
-          <div style="font-size:var(--text-headline-size);font-weight:600;">Share my data</div>
-          <div class="icon-btn icon-btn--secondary" onclick="closeSharingSheet()">
-            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </div>
-        </div>
-        <div class="bottom-sheet__body" style="padding-bottom:var(--space-8);">
-
-          <!-- Current shared -->
-          <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">Currently shared with</div>
-          <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
-            <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);">
-              <div style="width:36px;height:36px;border-radius:var(--radius-full);background:linear-gradient(135deg,#AF52DE,#007AFF);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <span style="font-size:15px;font-weight:700;color:#fff;">A</span>
-              </div>
-              <div style="flex:1;">
-                <div style="font-size:var(--text-subhead-size);font-weight:600;color:var(--color-label-primary);">Anna Kovalenko</div>
-                <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);">Lab results only</div>
-              </div>
-              <div style="font-size:var(--text-caption1-size);font-weight:600;color:#FF3B30;cursor:pointer;">Revoke</div>
-            </div>
-          </div>
-
-          <!-- What to share -->
-          <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">Invite someone new</div>
-          <input class="med-field-input" type="email" placeholder="Email address" style="margin-bottom:var(--space-3);"/>
-
-          <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">They can see</div>
-          <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);">
-              <span style="font-size:var(--text-subhead-size);color:var(--color-label-primary);">Lab results</span>
-              <div style="width:44px;height:26px;background:#34C759;border-radius:13px;position:relative;"><div style="position:absolute;right:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;"></div></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);">
-              <span style="font-size:var(--text-subhead-size);color:var(--color-label-primary);">Medications</span>
-              <div style="width:44px;height:26px;background:#34C759;border-radius:13px;position:relative;"><div style="position:absolute;right:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;"></div></div>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--layout-gutter);">
-              <span style="font-size:var(--text-subhead-size);color:var(--color-label-primary);">Symptoms</span>
-              <div style="width:44px;height:26px;background:var(--color-fill-secondary);border-radius:13px;position:relative;"><div style="position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div></div>
-            </div>
-          </div>
-
-          <button class="btn btn--filled btn--full" onclick="closeSharingSheet()">Send invite</button>
-        </div>
-      </div>
-
-    </div>
-
     <!-- ══════════════════════════
          SEARCH DRAWER
     ══════════════════════════ -->
@@ -2559,7 +2929,7 @@ img,svg{display:block;max-width:100%;}
             <div class="sd-date-btn__eyebrow">From</div>
             <div class="sd-date-btn__val sd-date-btn__val--empty" id="sd-from">Any date</div>
           </div>
-          <div class="sd-date-arrow">→</div>
+          <div class="sd-date-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
           <div class="sd-date-btn" id="sd-btn-to" onclick="openCal('to')">
             <div class="sd-date-btn__eyebrow">To</div>
             <div class="sd-date-btn__val sd-date-btn__val--empty" id="sd-to">Any date</div>
@@ -2581,36 +2951,51 @@ img,svg{display:block;max-width:100%;}
         <div class="sd-section-label">Document type</div>
 
         <div class="sd-filter-group" id="sd-filter-group">
+          <div class="sd-filter-row" data-type="vitals" onclick="toggleSdFilter(this)">
+            <div class="sd-filter-icon" style="background:rgba(255,45,85,0.10);"><svg viewBox="0 0 24 24" style="stroke:#FF2D55"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+            <div class="sd-filter-name">Vitals</div>
+            <div class="sd-filter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
           <div class="sd-filter-row" data-type="lab" onclick="toggleSdFilter(this)">
             <div class="sd-filter-icon" style="background:rgba(0,122,255,0.10);"><svg viewBox="0 0 24 24" style="stroke:#007AFF"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg></div>
             <div class="sd-filter-name">Lab results</div>
             <div class="sd-filter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
           </div>
-          <div class="sd-filter-row" data-type="visit" onclick="toggleSdFilter(this)">
-            <div class="sd-filter-icon" style="background:rgba(52,199,89,0.10);"><svg viewBox="0 0 24 24" style="stroke:#34C759"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-            <div class="sd-filter-name">Visits</div>
+          <div class="sd-filter-row" data-type="rx" onclick="toggleSdFilter(this)">
+            <div class="sd-filter-icon" style="background:rgba(175,82,222,0.10);"><svg viewBox="0 0 24 24" style="stroke:#AF52DE"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7Z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg></div>
+            <div class="sd-filter-name">Medications</div>
             <div class="sd-filter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
           </div>
-          <div class="sd-filter-row" data-type="rx" onclick="toggleSdFilter(this)">
-            <div class="sd-filter-icon" style="background:rgba(175,82,222,0.10);"><svg viewBox="0 0 24 24" style="stroke:#AF52DE"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
-            <div class="sd-filter-name">Prescriptions</div>
+          <div class="sd-filter-row" data-type="condition" onclick="toggleSdFilter(this)">
+            <div class="sd-filter-icon" style="background:rgba(255,59,48,0.10);"><svg viewBox="0 0 24 24" style="stroke:#FF3B30"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg></div>
+            <div class="sd-filter-name">Conditions</div>
             <div class="sd-filter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
           </div>
           <div class="sd-filter-row" data-type="vac" onclick="toggleSdFilter(this)">
-            <div class="sd-filter-icon" style="background:rgba(48,176,199,0.10);"><svg viewBox="0 0 24 24" style="stroke:#30B0C7"><path d="M18 2l4 4"/><path d="M20 4L9 15l-4 1 1-4L17 1z"/><path d="M3 21l4-4"/></svg></div>
+            <div class="sd-filter-icon" style="background:rgba(48,176,199,0.10);"><svg viewBox="0 0 24 24" style="stroke:#30B0C7"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg></div>
             <div class="sd-filter-name">Vaccines</div>
             <div class="sd-filter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
           </div>
-          <div class="sd-filter-row" data-type="symptom" onclick="toggleSdFilter(this)">
-            <div class="sd-filter-icon" style="background:rgba(255,149,0,0.10);"><svg viewBox="0 0 24 24" style="stroke:#FF9500"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
-            <div class="sd-filter-name">Symptoms</div>
+          <div class="sd-filter-row" data-type="procedure" onclick="toggleSdFilter(this)">
+            <div class="sd-filter-icon" style="background:rgba(88,86,214,0.10);"><svg viewBox="0 0 24 24" style="stroke:#5856D6"><path d="M8 15a6 6 0 0 0 6-6V3a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1v6a4 4 0 0 1-8 0V3a1 1 0 0 0-1-1H1"/><path d="M6 15v3a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></svg></div>
+            <div class="sd-filter-name">Procedures</div>
+            <div class="sd-filter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="sd-filter-row" data-type="visit" onclick="toggleSdFilter(this)">
+            <div class="sd-filter-icon" style="background:rgba(52,199,89,0.10);"><svg viewBox="0 0 24 24" style="stroke:#34C759"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            <div class="sd-filter-name">Appointments</div>
+            <div class="sd-filter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+          <div class="sd-filter-row" data-type="document" onclick="toggleSdFilter(this)">
+            <div class="sd-filter-icon" style="background:rgba(120,120,128,0.12);"><svg viewBox="0 0 24 24" style="stroke:#8E8E93"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg></div>
+            <div class="sd-filter-name">Documents</div>
             <div class="sd-filter-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
           </div>
         </div>
 
         <div class="sd-apply-wrap">
           <button class="btn btn--filled btn--full btn--lg" onclick="applySearch()">Apply filters</button>
-          <button onclick="clearDateFilter()" style="width:100%;margin-top:var(--space-2);padding:12px;background:none;border:none;font-size:var(--text-subhead-size);font-weight:500;color:var(--color-label-secondary);cursor:pointer;font-family:inherit;">Clear dates</button>
+          <button class="btn btn--plain btn--full" onclick="clearDateFilter()" style="margin-top:var(--space-2);color:var(--color-label-secondary);">Reset all</button>
         </div>
 
       </div>
@@ -2831,103 +3216,6 @@ img,svg{display:block;max-width:100%;}
     <!-- ══════════════════════════════════
          CONNECTS SUB-SCREEN
     ══════════════════════════════════ -->
-    <div class="page page--overlay" id="page-connects" style="background:var(--color-bg-grouped-primary);">
-      <!-- Nav -->
-      <div style="flex-shrink:0;height:var(--nav-bar-height);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-2);background:var(--color-bg-primary);border-bottom:var(--border-width) solid var(--color-separator);position:relative;">
-        <div onclick="closeConnects()" style="display:flex;align-items:center;gap:4px;color:var(--color-brand-primary);font-size:var(--text-body-size);min-width:44px;min-height:44px;cursor:pointer;-webkit-tap-highlight-color:transparent;">
-          <svg viewBox="0 0 24 24" width="10" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
-          Profile
-        </div>
-        <div style="position:absolute;left:50%;transform:translateX(-50%);font-size:var(--text-headline-size);font-weight:var(--text-headline-weight);letter-spacing:var(--text-headline-tracking);color:var(--color-label-primary);">Connected</div>
-        <div style="width:44px;"></div>
-      </div>
-
-      <div class="scroll-view" style="background:var(--color-bg-grouped-primary);">
-
-        <!-- HEALTH APPS -->
-        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Health apps</div></div>
-        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:#fff;box-shadow:var(--shadow-sm);">
-              <svg viewBox="0 0 24 24" style="fill:#000;stroke:none;width:18px;height:18px;"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Apple Health</div>
-              <div class="profile-row__sub">Weight, heart rate, sleep</div>
-            </div>
-            <div style="width:51px;height:31px;background:var(--color-brand-success);border-radius:var(--radius-full);position:relative;flex-shrink:0;">
-              <div style="position:absolute;right:2px;top:2px;width:27px;height:27px;background:#fff;border-radius:var(--radius-full);box-shadow:0 2px 4px rgba(0,0,0,0.25);"></div>
-            </div>
-          </div>
-          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:#fff;box-shadow:var(--shadow-sm);">
-              <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;"><circle cx="12" cy="12" r="10" fill="#4285F4"/><path d="M12 6c1.7 0 3 .7 3.9 1.8L14 9.6C13.5 9 12.8 8.5 12 8.5c-2 0-3.5 1.6-3.5 3.5s1.5 3.5 3.5 3.5c1.6 0 2.7-.8 3.1-2H12v-2h5.3c.1.4.1.8.1 1.2 0 3-2.1 5.3-5.4 5.3C8.7 18 6 15.3 6 12s2.7-6 6-6z" fill="#fff"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Google Health Connect</div>
-              <div class="profile-row__sub">Not connected</div>
-            </div>
-            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
-          </div>
-        </div>
-
-        <!-- LABS & CLINICS -->
-        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Labs &amp; clinics</div></div>
-        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Synevo</div>
-              <div class="profile-row__sub">Not connected</div>
-            </div>
-            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
-          </div>
-          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Dila</div>
-              <div class="profile-row__sub">Not connected</div>
-            </div>
-            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
-          </div>
-          <div style="height:var(--border-width);background:var(--color-separator);margin-left:56px;"></div>
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">CityLab</div>
-              <div class="profile-row__sub">Not connected</div>
-            </div>
-            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
-          </div>
-        </div>
-
-        <!-- EMAIL SYNC -->
-        <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Email sync</div></div>
-        <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
-          <div class="profile-row">
-            <div class="profile-row__icon" style="background:rgba(255,149,0,0.12);">
-              <svg viewBox="0 0 24 24" style="stroke:#FF9500;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            </div>
-            <div class="profile-row__body">
-              <div class="profile-row__title">Email</div>
-              <div class="profile-row__sub">Auto-import lab PDFs from inbox</div>
-            </div>
-            <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Set up</div>
-          </div>
-        </div>
-
-        <div style="height:var(--space-8);"></div>
-      </div>
-    </div>
-    <!-- /page-connects -->
 
         <!-- ══════════════════════════════════
          METRIC PICKER SHEET
@@ -2940,8 +3228,36 @@ img,svg{display:block;max-width:100%;}
         <div class="nav-bar__btn" onclick="closePicker()">Done</div>
       </div>
       <div class="bottom-sheet__body">
-        <div class="picker-hint">Choose up to 4 to show on Home</div>
+        <div class="picker-hint">Choose which metrics to show on Home</div>
         <div id="picker-list"></div>
+        <!-- Create custom metric -->
+        <div id="custom-metric-form" style="display:none;margin-top:var(--space-4);padding:var(--space-4);background:var(--color-fill-quaternary);border-radius:var(--radius-card);">
+          <div style="font-size:var(--text-subhead-size);font-weight:600;color:var(--color-label-primary);margin-bottom:var(--space-3);">New metric</div>
+          <div class="med-field-group">
+            <div class="med-field-label">Name</div>
+            <input class="med-field-input" type="text" id="custom-metric-name" placeholder="e.g. Uric acid, HbA1c…"/>
+          </div>
+          <div style="display:flex;gap:var(--space-2);">
+            <div class="med-field-group" style="flex:2;">
+              <div class="med-field-label">Current value</div>
+              <input class="med-field-input" type="text" id="custom-metric-value" placeholder="e.g. 7.2"/>
+            </div>
+            <div class="med-field-group" style="flex:1;">
+              <div class="med-field-label">Unit</div>
+              <input class="med-field-input" type="text" id="custom-metric-unit" placeholder="mmol"/>
+            </div>
+          </div>
+          <div style="display:flex;gap:var(--space-2);margin-top:var(--space-3);">
+            <button class="btn btn--gray" style="flex:1;min-height:40px;font-size:var(--text-subhead-size);" onclick="hideCustomForm()">Cancel</button>
+            <button class="btn btn--filled" style="flex:2;min-height:40px;font-size:var(--text-subhead-size);" onclick="saveCustomMetric()">Add metric</button>
+          </div>
+        </div>
+        <div style="margin-top:var(--space-3);" id="create-metric-btn-wrap">
+          <button class="btn btn--tinted btn--full" onclick="showCustomForm()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Create custom metric
+          </button>
+        </div>
       </div>
     </div>
 
@@ -3008,8 +3324,8 @@ img,svg{display:block;max-width:100%;}
       <!-- ── VIEW 2: VOICE ── -->
       <div class="log-view" id="lv-voice">
         <div class="voice-nav">
-          <div class="icon-btn" onclick="goTo('lv-choice');stopVoice()">
-            <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          <div class="icon-btn" onclick="closeLog()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </div>
           <div class="voice-nav__title" id="voice-nav-title">Listening…</div>
           <div style="width:44px"></div>
@@ -3028,15 +3344,17 @@ img,svg{display:block;max-width:100%;}
               <div class="wave-bar"></div><div class="wave-bar"></div>
             </div>
             <div class="voice-action-row">
-              <div class="voice-type-btn" onclick="goTo('lv-text');stopVoice()">
-                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
-                Type instead
+              <div class="voice-alt-btn" onclick="alert('Opens camera / file picker')" title="Photo or document">
+                <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
               </div>
               <div class="voice-done-btn" onclick="analyseEntry()">
                 <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
               </div>
+              <div class="voice-alt-btn" onclick="goTo('lv-text');stopVoice()" title="Type instead">
+                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+              </div>
             </div>
-            <div class="voice-hint">Tap ✓ when you're done speaking</div>
+            <div class="voice-hint">Tap ✓ when done · 📷 photo · ✏️ type</div>
           </div>
         </div>
       </div>
@@ -3185,6 +3503,419 @@ img,svg{display:block;max-width:100%;}
     </div>
     <!-- /log-sheet -->
 
+    <!-- HEALTH PASSPORT PAGE -->
+    <div class="page" id="page-health" style="background:var(--color-bg-grouped-primary);overflow-y:auto;padding-bottom:calc(var(--tab-bar-height-safe) + var(--space-4));">
+
+      <!-- NAV BAR -->
+      <div class="nav-bar" style="background:rgba(242,242,247,0.85);">
+        <div style="width:44px;"></div>
+        <div class="nav-bar__title">Health</div>
+        <button onclick="openSettingsSheet()" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;color:var(--color-brand-primary);">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+
+      <!-- USER + HEALTH SCORE CARD -->
+      <div style="padding:var(--space-3) var(--layout-gutter) var(--space-2);">
+        <div style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);padding:var(--space-4);">
+
+          <!-- Row 1: name, age, sex, stats -->
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-3);">
+            <div>
+              <div style="font-size:var(--text-title2-size);font-weight:700;color:var(--color-label-primary);line-height:1.1;">Mykhailo</div>
+              <div style="display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-2);flex-wrap:wrap;">
+                <span style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);">32 y · Male</span>
+                <span style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);">·</span>
+                <span style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);">180 cm</span>
+                <span style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);">·</span>
+                <span style="font-size:var(--text-subhead-size);color:var(--color-label-secondary);">A+</span>
+              </div>
+              <!-- Quick tags -->
+              <div style="display:flex;gap:var(--space-2);margin-top:var(--space-2);flex-wrap:wrap;">
+                <button onclick="event.stopPropagation()" style="background:var(--color-fill-tertiary);border:none;border-radius:var(--radius-full);padding:4px 10px;font-size:var(--text-caption1-size);color:var(--color-brand-primary);font-weight:500;cursor:pointer;">+ Add sex</button>
+                <button onclick="event.stopPropagation()" style="background:var(--color-fill-tertiary);border:none;border-radius:var(--radius-full);padding:4px 10px;font-size:var(--text-caption1-size);color:var(--color-brand-primary);font-weight:500;cursor:pointer;">+ Weight</button>
+              </div>
+            </div>
+            <button onclick="openSettingsSheet()" style="background:none;border:none;cursor:pointer;color:var(--color-label-tertiary);padding:0;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div style="height:0.5px;background:var(--color-separator);margin:0 0 var(--space-3);"></div>
+
+          <!-- Row 2: ring left + bars right — Guava layout -->
+          <div onclick="openHealthScore()" style="display:flex;align-items:center;gap:var(--space-4);cursor:pointer;-webkit-tap-highlight-color:transparent;">
+
+            <!-- Ring -->
+            <div style="position:relative;width:72px;height:72px;flex-shrink:0;">
+              <svg viewBox="0 0 72 72" width="72" height="72">
+                <circle cx="36" cy="36" r="30" fill="none" stroke="var(--color-fill-secondary)" stroke-width="6"/>
+                <circle cx="36" cy="36" r="30" fill="none" stroke="#007AFF" stroke-width="6" stroke-dasharray="94 94" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 36 36)"/>
+                <circle cx="36" cy="36" r="30" fill="none" stroke="#34C759" stroke-width="6" stroke-dasharray="32 156" stroke-dashoffset="-94" stroke-linecap="round" transform="rotate(-90 36 36)"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;">
+                <span style="font-size:20px;font-weight:700;color:var(--color-label-primary);line-height:1;">22</span>
+              </div>
+            </div>
+
+            <!-- Bars -->
+            <div style="flex:1;display:flex;flex-direction:column;gap:9px;">
+
+              <!-- Prevention -->
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+                  <span style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-label-primary);">Prevention</span>
+                  <span style="font-size:var(--text-caption2-size);color:var(--color-label-secondary);">2/4</span>
+                </div>
+                <div style="height:5px;background:var(--color-fill-secondary);border-radius:3px;overflow:hidden;">
+                  <div style="height:100%;width:50%;background:#007AFF;border-radius:3px;"></div>
+                </div>
+              </div>
+
+              <!-- Monitoring -->
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+                  <span style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-label-primary);">Monitoring</span>
+                  <div style="display:flex;align-items:center;gap:4px;">
+                    <span style="font-size:var(--text-caption2-size);color:var(--color-label-secondary);">1/6</span>
+                    <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                </div>
+                <div style="height:5px;background:var(--color-fill-secondary);border-radius:3px;overflow:hidden;">
+                  <div style="height:100%;width:17%;background:#34C759;border-radius:3px;"></div>
+                </div>
+              </div>
+
+              <!-- Action -->
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+                  <span style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-label-primary);">Action</span>
+                  <span style="font-size:var(--text-caption2-size);color:var(--color-label-secondary);">0/2</span>
+                </div>
+                <div style="height:5px;background:var(--color-fill-secondary);border-radius:3px;overflow:hidden;">
+                  <div style="height:100%;width:0%;background:#FF2D55;border-radius:3px;"></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PASSPORT SECTIONS -->
+      <div style="padding:var(--space-2) var(--layout-gutter) 0;">
+
+        <!-- Biomarkers / Lab values -->
+        <div style="font-size:var(--text-footnote-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;padding:var(--space-3) 0 var(--space-2);">Biomarkers</div>
+        <div onclick="openBiomarkers()" style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);padding:var(--space-4);cursor:pointer;-webkit-tap-highlight-color:transparent;">
+
+          <!-- Header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-4);">
+            <div style="display:flex;align-items:center;gap:var(--space-3);">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#30B0C7" stroke-width="1.8" stroke-linecap="round"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
+              <span style="font-size:var(--text-title3-size);font-weight:600;color:var(--color-label-primary);">Biomarkers</span>
+            </div>
+            <div style="width:32px;height:32px;border-radius:var(--radius-full);background:var(--color-fill-secondary);display:flex;align-items:center;justify-content:center;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-label-secondary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+
+          <!-- Grid of categories with dots -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);">
+
+            <!-- Heart health -->
+            <div>
+              <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FF2D55" stroke-width="1.8" stroke-linecap="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+              </div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#FF3B30;"></div>
+              </div>
+            </div>
+
+            <!-- Kidney -->
+            <div>
+              <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FF9500" stroke-width="1.8" stroke-linecap="round"><path d="M12 2C8 2 5 5 5 9c0 3 1.5 5.5 3 7.5S12 22 12 22s2.5-3.5 4-5.5S19 12 19 9c0-4-3-7-7-7z"/><path d="M12 2c-2 3-3 6-3 9s1 6 3 9"/></svg>
+              </div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+              </div>
+            </div>
+
+            <!-- Liver -->
+            <div>
+              <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FF6B35" stroke-width="1.8" stroke-linecap="round"><path d="M12 3C7 3 3 7 3 12c0 3 2 6 5 8h8c3-2 5-5 5-8 0-5-4-9-9-9z"/></svg>
+              </div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <div style="width:10px;height:10px;border-radius:50%;background:#FF9500;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#FF9500;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:#34C759;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+              </div>
+            </div>
+
+            <!-- Glucose / Metabolism -->
+            <div>
+              <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#AF52DE" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="7" width="7" height="7" rx="1"/><rect x="15" y="7" width="7" height="7" rx="1"/><rect x="8.5" y="10" width="7" height="7" rx="1"/></svg>
+              </div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <div style="width:10px;height:10px;border-radius:50%;background:#FF3B30;"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+              </div>
+            </div>
+
+            <!-- Blood -->
+            <div>
+              <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FF2D55" stroke-width="1.8" stroke-linecap="round"><ellipse cx="8" cy="12" rx="5" ry="3"/><ellipse cx="16" cy="12" rx="5" ry="3"/></svg>
+              </div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+              </div>
+            </div>
+
+            <!-- Immunity -->
+            <div>
+              <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2);">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#007AFF" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+                <div style="width:10px;height:10px;border-radius:50%;background:var(--color-fill-primary);"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Medications -->
+        <div style="font-size:var(--text-footnote-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;padding:var(--space-3) 0 var(--space-2);">Medications</div>
+        <div style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);border-bottom:var(--border-width) solid var(--color-separator);cursor:pointer;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(175,82,222,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#AF52DE" stroke-width="2" stroke-linecap="round"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7Z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);font-weight:500;color:var(--color-label-primary);">Current</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;">Metformin 500mg · Lisinopril 10mg</div>
+            </div>
+            <span style="font-size:var(--text-caption1-size);background:rgba(175,82,222,0.1);color:#AF52DE;font-weight:600;padding:2px 8px;border-radius:var(--radius-full);">2 active</span>
+            <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(120,120,128,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8E8E93" stroke-width="2" stroke-linecap="round"><path d="M10.5 20.5 3.5 13.5a5 5 0 0 1 7-7l7 7a5 5 0 0 1-7 7Z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);font-weight:500;color:var(--color-label-primary);">Past</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;">Amoxicillin · Ibuprofen course</div>
+            </div>
+            <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Conditions -->
+        <div style="font-size:var(--text-footnote-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;padding:var(--space-3) 0 var(--space-2);">Conditions & injuries</div>
+        <div style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,59,48,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);font-weight:500;color:var(--color-label-primary);">Type 2 Diabetes · Hypertension</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;">2 chronic conditions</div>
+            </div>
+            <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Allergies -->
+        <div style="font-size:var(--text-footnote-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;padding:var(--space-3) 0 var(--space-2);">Allergies & intolerances</div>
+        <div style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,149,0,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FF9500" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);font-weight:500;color:var(--color-label-primary);">Penicillin</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;">1 documented allergy</div>
+            </div>
+            <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Vaccines -->
+        <div style="font-size:var(--text-footnote-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;padding:var(--space-3) 0 var(--space-2);">Vaccines</div>
+        <div style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(48,176,199,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#30B0C7" stroke-width="2" stroke-linecap="round"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);font-weight:500;color:var(--color-label-primary);">COVID-19 · Flu · Hepatitis B</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;">Last: Flu · Oct 2024</div>
+            </div>
+            <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Appointments -->
+        <div style="font-size:var(--text-footnote-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.06em;padding:var(--space-3) 0 var(--space-2);">Appointments</div>
+        <div style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--layout-gutter);cursor:pointer;">
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(52,199,89,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#34C759" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:var(--text-body-size);font-weight:500;color:var(--color-label-primary);">Endocrinologist · 28 Jun 2025</div>
+              <div style="font-size:var(--text-caption1-size);color:var(--color-label-secondary);margin-top:1px;">Next visit in 4 days</div>
+            </div>
+            <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+      </div><!-- /passport sections -->
+    </div><!-- /page-health -->
+
+    <!-- SETTINGS SHEET (gear icon) -->
+    <div id="settings-backdrop" onclick="closeSettingsSheet()" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:calc(var(--z-modal) - 1);opacity:0;pointer-events:none;transition:opacity 0.3s;max-width:var(--layout-max-width);left:50%;transform:translateX(-50%);"></div>
+    <div class="bottom-sheet" id="settings-sheet" style="max-height:90dvh;overflow-y:auto;">
+      <div class="bottom-sheet__handle"></div>
+      <div class="bottom-sheet__header">
+        <div style="font-size:var(--text-headline-size);font-weight:600;">Settings</div>
+        <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-label-secondary);" onclick="closeSettingsSheet()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+      </div>
+      <div class="bottom-sheet__body" style="padding-bottom:var(--space-8);">
+
+        <!-- Connected apps -->
+        <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">Connected apps</div>
+        <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
+          <div class="profile-row" onclick="closeSettingsSheet();openConnects();" style="background:transparent;">
+            <div class="profile-row__icon" style="background:rgba(0,122,255,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#007AFF;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Connected apps &amp; services</div>
+              <div class="profile-row__sub">Apple Health · 1 more available</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">Notifications</div>
+        <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
+          <div class="profile-row" style="background:transparent;">
+            <div class="profile-row__icon" style="background:rgba(255,59,48,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Medication reminders</div>
+              <div class="profile-row__sub">On · 08:00 and 20:00</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+          <div class="profile-row" style="background:transparent;">
+            <div class="profile-row__icon" style="background:rgba(0,122,255,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#007AFF;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Quiet hours</div>
+              <div class="profile-row__sub">22:00 – 08:00</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Export -->
+        <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">Export</div>
+        <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
+          <div class="profile-row" style="background:transparent;">
+            <div class="profile-row__icon" style="background:rgba(255,59,48,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Doctor summary</div>
+              <div class="profile-row__sub">Smart summary · choose period</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+          <div class="profile-row" style="background:transparent;">
+            <div class="profile-row__icon" style="background:rgba(52,199,89,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#34C759;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <div class="profile-row__body">
+              <div class="profile-row__title">Export all data</div>
+              <div class="profile-row__sub">CSV · full history</div>
+            </div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Privacy -->
+        <div style="font-size:var(--text-caption1-size);font-weight:600;color:var(--color-label-secondary);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">Privacy & account</div>
+        <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
+          <div class="profile-row" style="background:transparent;">
+            <div class="profile-row__icon" style="background:rgba(142,142,147,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#8E8E93;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="profile-row__body"><div class="profile-row__title">Change password</div></div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+          <div class="profile-row" style="background:transparent;">
+            <div class="profile-row__icon" style="background:rgba(142,142,147,0.12);">
+              <svg viewBox="0 0 24 24" style="stroke:#8E8E93;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="profile-row__body"><div class="profile-row__title">Privacy policy</div></div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+          <div class="profile-row" style="background:transparent;">
+            <div class="profile-row__icon" style="background:rgba(255,59,48,0.08);">
+              <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </div>
+            <div class="profile-row__body"><div class="profile-row__title" style="color:#FF3B30;">Delete account</div></div>
+            <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <div style="background:var(--color-fill-tertiary);border-radius:var(--radius-card);overflow:hidden;margin-bottom:var(--space-4);">
+          <div class="profile-row" style="background:transparent;justify-content:center;">
+            <div style="font-size:var(--text-body-size);font-weight:500;color:#FF3B30;">Sign out</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;padding-bottom:var(--space-2);">
+          <div style="font-size:var(--text-caption2-size);color:var(--color-label-tertiary);">Vela Health · v1.0.0</div>
+        </div>
+      </div>
+    </div>
+
     <!-- TAB BAR -->
     <div class="tab-bar">
       <div class="tab-bar__item tab-bar__item--active" id="tab-home" onclick="switchTab('home')">
@@ -3206,10 +3937,270 @@ img,svg{display:block;max-width:100%;}
         <div class="tab-bar__icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
         <div class="tab-bar__label">Ask</div>
       </div>
-      <div class="tab-bar__item" id="tab-profile" onclick="switchTab('profile')">
+      <div class="tab-bar__item" id="tab-health" onclick="switchTab('health')">
         <div class="tab-bar__icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <div class="tab-bar__label">Profile</div>
+        <div class="tab-bar__label">Health</div>
       </div>
+    </div>
+
+    <!-- PROFILE MODAL BACKDROP -->
+    <div class="profile-modal-backdrop" id="profile-modal-backdrop" onclick="closeProfileModal()"></div>
+
+    <!-- PROFILE MODAL (Dialog-style) -->
+    <div class="profile-modal" id="profile-modal">
+      <div class="profile-modal__header">
+        <div class="profile-modal__user-card" onclick="toggleProfileDropdown(event)">
+          <div class="profile-modal__avatar">М</div>
+          <div class="profile-modal__user-info">
+            <div class="profile-modal__user-name">Mykhailo</div>
+            <div class="profile-modal__user-email">mykhailo@gmail.com</div>
+          </div>
+          <svg class="profile-modal__chevron" id="profile-modal-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="profile-modal__edit-btn" onclick="alert('Profile editing — coming soon')">Edit</div>
+      </div>
+
+      <!-- Profile dropdown (push-down, animates open) -->
+      <div class="profile-modal__dropdown" id="profile-modal-dropdown">
+        <div class="profile-modal__dropdown-inner">
+          <div class="profile-modal__dropdown-item">
+            <div class="profile-modal__dropdown-avatar">И</div>
+            <div class="profile-modal__dropdown-text">
+              <div class="profile-modal__dropdown-name">Igor</div>
+            </div>
+          </div>
+          <div class="profile-modal__dropdown-item">
+            <div class="profile-modal__dropdown-avatar">О</div>
+            <div class="profile-modal__dropdown-text">
+              <div class="profile-modal__dropdown-name">Olha</div>
+            </div>
+          </div>
+          <div class="profile-modal__dropdown-add">+ Add profile</div>
+        </div>
+      </div>
+
+      <div class="profile-modal__body">
+                <!-- CONNECTED APPS — single row → sub-screen -->
+                <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Connected apps</div></div>
+                <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+                  <div class="profile-row" onclick="openConnects()" style="cursor:pointer;">
+                    <div class="profile-row__icon" style="background:rgba(0,122,255,0.12);">
+                      <svg viewBox="0 0 24 24" style="stroke:#007AFF;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title">Connected apps &amp; services</div>
+                      <div class="profile-row__sub">Apple Health · 1 more available</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                </div>
+        
+                <!-- NOTIFICATIONS -->
+                <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Notifications</div></div>
+                <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+                  <div class="profile-row">
+                    <div class="profile-row__icon" style="background:rgba(255,59,48,0.12);">
+                      <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title">Medication reminders</div>
+                      <div class="profile-row__sub">On · 08:00 and 20:00</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                  <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+                  <div class="profile-row">
+                    <div class="profile-row__icon" style="background:rgba(175,82,222,0.12);">
+                      <svg viewBox="0 0 24 24" style="stroke:#AF52DE;"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2-6.4-4.8L5.6 21l2.4-7.2-6-4.8h7.6z"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title">Insights</div>
+                      <div class="profile-row__sub">On · when new patterns found</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                  <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+                  <div class="profile-row">
+                    <div class="profile-row__icon" style="background:rgba(0,122,255,0.12);">
+                      <svg viewBox="0 0 24 24" style="stroke:#007AFF;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title">Quiet hours</div>
+                      <div class="profile-row__sub">22:00 – 08:00</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                </div>
+        
+                <!-- EXPORT -->
+                <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Export</div></div>
+                <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+                  <div class="profile-row">
+                    <div class="profile-row__icon" style="background:rgba(255,59,48,0.12);">
+                      <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title">Doctor summary</div>
+                      <div class="profile-row__sub">Smart summary · choose period</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                  <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+                  <div class="profile-row">
+                    <div class="profile-row__icon" style="background:rgba(52,199,89,0.12);">
+                      <svg viewBox="0 0 24 24" style="stroke:#34C759;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title">Export all data</div>
+                      <div class="profile-row__sub">CSV · full history</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                </div>
+        
+                <!-- PRIVACY -->
+                <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Privacy & account</div></div>
+                <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+                  <div class="profile-row">
+                    <div class="profile-row__icon" style="background:rgba(142,142,147,0.12);">
+                      <svg viewBox="0 0 24 24" style="stroke:#8E8E93;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title">Change password</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                  <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+                  <div class="profile-row">
+                    <div class="profile-row__icon" style="background:rgba(142,142,147,0.12);">
+                      <svg viewBox="0 0 24 24" style="stroke:#8E8E93;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title">Privacy policy</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                  <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+                  <div class="profile-row">
+                    <div class="profile-row__icon" style="background:rgba(255,59,48,0.08);">
+                      <svg viewBox="0 0 24 24" style="stroke:#FF3B30;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                    </div>
+                    <div class="profile-row__body">
+                      <div class="profile-row__title" style="color:#FF3B30;">Delete account</div>
+                    </div>
+                    <svg class="profile-row__chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                </div>
+        
+                <!-- Sign out -->
+                <div style="padding:var(--space-4) var(--layout-gutter) var(--space-2);">
+                  <div class="profile-row" onclick="closeProfileModal()" style="background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);justify-content:center;padding:var(--space-3) var(--layout-gutter);">
+                    <div style="font-size:var(--text-body-size);font-weight:500;color:#FF3B30;">Sign out</div>
+                  </div>
+                </div>
+        
+                <!-- Version -->
+                <div style="text-align:center;padding-bottom:var(--space-6);">
+                  <div style="font-size:var(--text-caption2-size);color:var(--color-label-tertiary);">Vela Health · v1.0.0</div>
+                </div>
+        
+      </div>
+
+      <!-- CONNECTED APPS SUB-PANEL (slides in from right) -->
+      <div class="profile-subpanel" id="connects-subpanel">
+        <div class="profile-subpanel__nav">
+          <div class="profile-subpanel__back" onclick="closeConnects()">
+            <svg viewBox="0 0 24 24" width="10" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Profile
+          </div>
+          <div class="profile-subpanel__title">Connected</div>
+        </div>
+        <div class="profile-subpanel__body">
+
+          <!-- HEALTH APPS -->
+          <div class="section-hdr"><div class="section-hdr__title">Health apps</div></div>
+          <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+            <div class="profile-row">
+              <div class="profile-row__icon" style="background:#fff;box-shadow:var(--shadow-sm);">
+                <svg viewBox="0 0 24 24" style="fill:#000;stroke:none;width:18px;height:18px;"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+              </div>
+              <div class="profile-row__body">
+                <div class="profile-row__title">Apple Health</div>
+                <div class="profile-row__sub">Weight, heart rate, sleep</div>
+              </div>
+              <div style="width:51px;height:31px;background:var(--color-brand-success);border-radius:var(--radius-full);position:relative;flex-shrink:0;">
+                <div style="position:absolute;right:2px;top:2px;width:27px;height:27px;background:#fff;border-radius:var(--radius-full);box-shadow:0 2px 4px rgba(0,0,0,0.25);"></div>
+              </div>
+            </div>
+            <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+            <div class="profile-row">
+              <div class="profile-row__icon" style="background:#fff;box-shadow:var(--shadow-sm);">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:none;"><circle cx="12" cy="12" r="10" fill="#4285F4"/><path d="M12 6c1.7 0 3 .7 3.9 1.8L14 9.6C13.5 9 12.8 8.5 12 8.5c-2 0-3.5 1.6-3.5 3.5s1.5 3.5 3.5 3.5c1.6 0 2.7-.8 3.1-2H12v-2h5.3c.1.4.1.8.1 1.2 0 3-2.1 5.3-5.4 5.3C8.7 18 6 15.3 6 12s2.7-6 6-6z" fill="#fff"/></svg>
+              </div>
+              <div class="profile-row__body">
+                <div class="profile-row__title">Google Health Connect</div>
+                <div class="profile-row__sub">Not connected</div>
+              </div>
+              <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
+            </div>
+          </div>
+
+          <!-- LABS & CLINICS -->
+          <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Labs &amp; clinics</div></div>
+          <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+            <div class="profile-row">
+              <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
+                <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
+              </div>
+              <div class="profile-row__body">
+                <div class="profile-row__title">Synevo</div>
+                <div class="profile-row__sub">Not connected</div>
+              </div>
+              <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
+            </div>
+            <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+            <div class="profile-row">
+              <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
+                <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
+              </div>
+              <div class="profile-row__body">
+                <div class="profile-row__title">Dila</div>
+                <div class="profile-row__sub">Not connected</div>
+              </div>
+              <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
+            </div>
+            <div style="height:var(--border-width);background:var(--color-separator);margin-left:64px;"></div>
+            <div class="profile-row">
+              <div class="profile-row__icon" style="background:rgba(48,176,199,0.12);">
+                <svg viewBox="0 0 24 24" style="stroke:#30B0C7;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M9 2v6l-5 9a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-5-9V2"/><line x1="8" y1="2" x2="16" y2="2"/></svg>
+              </div>
+              <div class="profile-row__body">
+                <div class="profile-row__title">CityLab</div>
+                <div class="profile-row__sub">Not connected</div>
+              </div>
+              <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Connect</div>
+            </div>
+          </div>
+
+          <!-- EMAIL SYNC -->
+          <div class="section-hdr" style="padding-top:var(--space-4);"><div class="section-hdr__title">Email sync</div></div>
+          <div style="margin:0 var(--layout-gutter);background:var(--color-bg-grouped-secondary);border-radius:var(--radius-card);overflow:hidden;">
+            <div class="profile-row">
+              <div class="profile-row__icon" style="background:rgba(255,149,0,0.12);">
+                <svg viewBox="0 0 24 24" style="stroke:#FF9500;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="profile-row__body">
+                <div class="profile-row__title">Email</div>
+                <div class="profile-row__sub">Auto-import lab PDFs from inbox</div>
+              </div>
+              <div style="font-size:var(--text-subhead-size);font-weight:500;color:var(--color-brand-primary);">Set up</div>
+            </div>
+          </div>
+
+          <div style="height:var(--space-8);"></div>
+        </div>
+      </div>
+
     </div>
 
   </div><!-- /app-body -->
@@ -3219,7 +4210,53 @@ img,svg{display:block;max-width:100%;}
 /* ═══════════════════════════════════════════════
    UNIFIED TAB NAVIGATION
 ═══════════════════════════════════════════════ */
-const TABS = ['home', 'records', 'ask', 'profile'];
+
+/* ═══ Profile Dropdown / Modal ═══ */
+function toggleProfileDropdown(e) {
+  if (e) e.stopPropagation();
+  const dropdown = document.getElementById('profile-modal-dropdown');
+  const card = document.querySelector('.profile-modal__user-card');
+  dropdown.classList.toggle('profile-modal__dropdown--open');
+  if (card) card.classList.toggle('profile-modal__user-card--open');
+}
+
+function closeProfileDropdown() {
+  const dropdown = document.getElementById('profile-modal-dropdown');
+  const card = document.querySelector('.profile-modal__user-card');
+  if (dropdown) dropdown.classList.remove('profile-modal__dropdown--open');
+  if (card) card.classList.remove('profile-modal__user-card--open');
+}
+
+function openProfileModal() {
+  const backdrop = document.getElementById('profile-modal-backdrop');
+  const modal = document.getElementById('profile-modal');
+  
+  closeProfileDropdown();
+  modal.classList.add('profile-modal--open');
+  backdrop.classList.add('profile-modal-backdrop--open');
+}
+
+function closeProfileModal() {
+  document.getElementById('profile-modal').classList.remove('profile-modal--open');
+  document.getElementById('profile-modal-backdrop').classList.remove('profile-modal-backdrop--open');
+  closeProfileDropdown();
+}
+
+function openConnectedAppsModal() {
+  alert('Connected Apps modal - coming soon');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  const dropdown = document.getElementById('profile-modal-dropdown');
+  const userCard = e.target.closest('.profile-modal__user-card');
+  
+  if (dropdown && !userCard && !dropdown.contains(e.target)) {
+    closeProfileDropdown();
+  }
+});
+
+const TABS = ['home', 'records', 'ask', 'health'];
 let currentTab = 'home';
 
 function switchTab(tab) {
@@ -3251,32 +4288,42 @@ function toggleVisitCard() {
 /* ═══════════════════════════════════════════════
    MEDICATIONS
 ═══════════════════════════════════════════════ */
-function toggleMed(row) {
+function toggleMedRow(rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
   const check = row.querySelector('.med-row__check');
   const name  = row.querySelector('.med-row__name');
-  const icon  = row.querySelector('.med-row__icon');
+  const meta  = row.querySelector('.med-row__meta');
   const isDone = check.classList.toggle('med-row__check--done');
   name.classList.toggle('med-row__name--taken', isDone);
-  icon.classList.toggle('med-row__icon--taken', isDone);
+  if (isDone) {
+    const now = new Date();
+    const h = now.getHours(), m = now.getMinutes().toString().padStart(2,'0');
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    meta.textContent = meta.textContent.split('·')[0].trim() + ' · Taken ' + h12 + ':' + m + ' ' + ampm;
+  } else {
+    meta.textContent = meta.textContent.replace(/· Taken .+/, '· Pending');
+  }
 }
 
 /* ═══════════════════════════════════════════════
    METRICS DATA
 ═══════════════════════════════════════════════ */
 const ALL_METRICS = [
-  { id:'weight',   name:'Weight',       unit:'kg',    value:'74.2', status:'normal', sub:'Healthy range',  bg:'rgba(0,122,255,0.10)',  stroke:'#007AFF', path:'M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z' },
-  { id:'pressure', name:'Blood Pressure',unit:'',     value:'132/85',status:'high', sub:'Slightly high',   bg:'rgba(255,149,0,0.10)',  stroke:'#FF9500', path:'M22 12h-4l-3 9L9 3l-3 9H2' },
-  { id:'glucose',  name:'Glucose',      unit:'mmol',  value:'5.4',  status:'normal', sub:'Normal',         bg:'rgba(0,122,255,0.10)',  stroke:'#007AFF', path:'M12 2v20M2 12h20' },
-  { id:'pulse',    name:'Heart Rate',   unit:'bpm',   value:'72',   status:'normal', sub:'Normal',         bg:'rgba(255,59,48,0.10)',  stroke:'#FF3B30', path:'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
-  { id:'ferritin', name:'Ferritin',     unit:'ng/mL', value:'18',   status:'low',    sub:'Low',            bg:'rgba(255,149,0,0.10)',  stroke:'#FF9500', path:'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
-  { id:'hgb',      name:'Hemoglobin',   unit:'g/dL',  value:'13.8', status:'normal', sub:'Normal',         bg:'rgba(255,59,48,0.10)',  stroke:'#FF3B30', path:'M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z' },
-  { id:'vitd',     name:'Vitamin D',    unit:'ng/mL', value:'28',   status:'low',    sub:'Slightly low',   bg:'rgba(255,204,0,0.12)',  stroke:'#FFCC00', path:'M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2' },
-  { id:'chol',     name:'Cholesterol',  unit:'mmol',  value:'4.9',  status:'normal', sub:'Normal',         bg:'rgba(48,176,199,0.10)', stroke:'#30B0C7', path:'M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z' },
-  { id:'temp',     name:'Temperature',  unit:'°C',    value:'36.6', status:'normal', sub:'Normal',         bg:'rgba(255,59,48,0.10)',  stroke:'#FF3B30', path:'M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z' },
-  { id:'spo2',     name:'SpO2',         unit:'%',     value:'98',   status:'normal', sub:'Normal',         bg:'rgba(0,122,255,0.10)',  stroke:'#007AFF', path:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' },
-  { id:'mood',     name:'Mood',         unit:'/10',   value:'7',    status:'normal', sub:'Good',           bg:'rgba(52,199,89,0.10)',  stroke:'#34C759', path:'M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10z' },
-  { id:'pain',     name:'Pain',         unit:'/10',   value:'2',    status:'normal', sub:'Low',            bg:'rgba(255,149,0,0.10)',  stroke:'#FF9500', path:'M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zM8 15h8' },
-  { id:'sleep',    name:'Sleep',        unit:'h',     value:'6.5',  status:'normal', sub:'45m below avg',  bg:'rgba(88,86,214,0.10)',  stroke:'#5856D6', path:'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' },
+  { id:'weight',   name:'Weight',       unit:'kg',    value:'74.2', status:'normal', sub:'Healthy range',  bg:'rgba(0,122,255,0.10)',  stroke:'#007AFF', lastUpdated:'Today',      path:'M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zm0 12c-5.33 0-8 2.67-8 4v2h16v-2c0-1.33-2.67-4-8-4z' },
+  { id:'pressure', name:'Blood Pressure',unit:'',     value:'132/85',status:'high', sub:'Slightly high',   bg:'rgba(255,149,0,0.10)',  stroke:'#FF9500', lastUpdated:'Yesterday',  path:'M22 12h-4l-3 9L9 3l-3 9H2' },
+  { id:'glucose',  name:'Glucose',      unit:'mmol',  value:'5.4',  status:'normal', sub:'Normal',         bg:'rgba(0,122,255,0.10)',  stroke:'#007AFF', lastUpdated:'Jun 10',     path:'M12 2v20M2 12h20' },
+  { id:'pulse',    name:'Heart Rate',   unit:'bpm',   value:'72',   status:'normal', sub:'Normal',         bg:'rgba(255,59,48,0.10)',  stroke:'#FF3B30', lastUpdated:'Today',      path:'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
+  { id:'ferritin', name:'Ferritin',     unit:'ng/mL', value:'18',   status:'low',    sub:'Low',            bg:'rgba(255,149,0,0.10)',  stroke:'#FF9500', lastUpdated:'Jun 10',     path:'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' },
+  { id:'hgb',      name:'Hemoglobin',   unit:'g/dL',  value:'13.8', status:'normal', sub:'Normal',         bg:'rgba(255,59,48,0.10)',  stroke:'#FF3B30', lastUpdated:'Jun 10',     path:'M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z' },
+  { id:'vitd',     name:'Vitamin D',    unit:'ng/mL', value:'28',   status:'low',    sub:'Slightly low',   bg:'rgba(255,204,0,0.12)',  stroke:'#FFCC00', lastUpdated:'Jun 10',     path:'M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2' },
+  { id:'chol',     name:'Cholesterol',  unit:'mmol',  value:'4.9',  status:'normal', sub:'Normal',         bg:'rgba(48,176,199,0.10)', stroke:'#30B0C7', lastUpdated:'Jun 10',     path:'M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z' },
+  { id:'temp',     name:'Temperature',  unit:'°C',    value:'36.6', status:'normal', sub:'Normal',         bg:'rgba(255,59,48,0.10)',  stroke:'#FF3B30', lastUpdated:'Yesterday',  path:'M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z' },
+  { id:'spo2',     name:'SpO2',         unit:'%',     value:'98',   status:'normal', sub:'Normal',         bg:'rgba(0,122,255,0.10)',  stroke:'#007AFF', lastUpdated:'Today',      path:'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z' },
+  { id:'mood',     name:'Mood',         unit:'/10',   value:'7',    status:'normal', sub:'Good',           bg:'rgba(52,199,89,0.10)',  stroke:'#34C759', lastUpdated:'Today',      path:'M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01M22 12c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2s10 4.48 10 10z' },
+  { id:'pain',     name:'Pain',         unit:'/10',   value:'2',    status:'normal', sub:'Low',            bg:'rgba(255,149,0,0.10)',  stroke:'#FF9500', lastUpdated:'Yesterday',  path:'M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10zM8 15h8' },
+  { id:'sleep',    name:'Sleep',        unit:'h',     value:'6.5',  status:'normal', sub:'45m below avg',  bg:'rgba(88,86,214,0.10)',  stroke:'#5856D6', lastUpdated:'Today',      path:'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' },
 ];
 
 const METRIC_HISTORY = {
@@ -3318,10 +4365,11 @@ function renderGrid() {
           <div class="metric-card__icon" style="background:${m.bg}">
             <svg viewBox="0 0 24 24" style="stroke:${m.stroke}"><path d="${m.path}"/></svg>
           </div>
+          <div class="metric-card__label">${m.name}</div>
         </div>
         <div class="metric-card__body">
           <div class="metric-card__value">${m.value}<small> ${m.unit}</small></div>
-          <div class="metric-card__label">${m.name}</div>
+          <div class="metric-card__updated">${m.lastUpdated || ''}</div>
         </div>
       </div>`;
   });
@@ -3511,6 +4559,42 @@ function togglePickerItem(id, el) {
     selectedMetrics.push(id);
     el.classList.add('picker-item--selected');
   }
+}
+
+function showCustomForm() {
+  document.getElementById('custom-metric-form').style.display = 'block';
+  document.getElementById('create-metric-btn-wrap').style.display = 'none';
+  setTimeout(() => document.getElementById('custom-metric-name').focus(), 100);
+}
+
+function hideCustomForm() {
+  document.getElementById('custom-metric-form').style.display = 'none';
+  document.getElementById('create-metric-btn-wrap').style.display = 'block';
+  document.getElementById('custom-metric-name').value = '';
+  document.getElementById('custom-metric-value').value = '';
+  document.getElementById('custom-metric-unit').value = '';
+}
+
+function saveCustomMetric() {
+  const name  = document.getElementById('custom-metric-name').value.trim();
+  const value = document.getElementById('custom-metric-value').value.trim();
+  const unit  = document.getElementById('custom-metric-unit').value.trim();
+  if (!name) { document.getElementById('custom-metric-name').focus(); return; }
+
+  const id = 'custom_' + Date.now();
+  const newMetric = {
+    id, name, unit, value: value || '—', status:'normal',
+    sub:'', bg:'rgba(88,86,214,0.10)', stroke:'#5856D6',
+    lastUpdated:'Just now',
+    path:'M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z'
+  };
+  METRIC_HISTORY[id] = { unit, status:'normal', h:[{v:value||'0',d:'Jun'}] };
+  ALL_METRICS.push(newMetric);
+
+  if (selectedMetrics.length < 6) selectedMetrics.push(id);
+
+  hideCustomForm();
+  renderPickerList();
 }
 
 /* ── INIT ── */
@@ -3779,14 +4863,15 @@ function applyFilters(q = '') {
     card.style.display = show ? 'flex' : 'none';
     if (show) vis++;
   });
-  // hide month groups (header + cards wrapper) with no visible cards
+  // hide month headers with no visible cards
   document.querySelectorAll('.month-header').forEach(hdr => {
-    const monthCards = hdr.nextElementSibling;
-    if (!monthCards || !monthCards.classList.contains('month-cards')) return;
-    const hasVis = Array.from(monthCards.querySelectorAll('.doc-card'))
-      .some(c => c.style.display !== 'none');
+    let next = hdr.nextElementSibling;
+    let hasVis = false;
+    while (next && !next.classList.contains('month-header')) {
+      if (next.classList.contains('doc-card') && next.style.display !== 'none') { hasVis = true; break; }
+      next = next.nextElementSibling;
+    }
     hdr.style.display = hasVis ? 'block' : 'none';
-    monthCards.style.display = hasVis ? 'block' : 'none';
   });
   document.getElementById('doc-count').textContent = vis;
   document.getElementById('no-results').style.display = vis === 0 ? 'flex' : 'none';
@@ -3877,6 +4962,7 @@ function renderCal() {
   grid.innerHTML = html;
 }
 function clearDateFilter() {
+  // Reset dates
   sdFrom = null; sdTo = null;
   const from = document.getElementById('sd-from');
   const to   = document.getElementById('sd-to');
@@ -3885,6 +4971,8 @@ function clearDateFilter() {
   document.getElementById('sd-btn-from').classList.remove('sd-date-btn--active');
   document.getElementById('sd-btn-to').classList.remove('sd-date-btn--active');
   document.getElementById('cal-popup').classList.remove('cal-popup--open');
+  // Reset document type filters
+  document.querySelectorAll('.sd-filter-row--selected').forEach(r => r.classList.remove('sd-filter-row--selected'));
 }
 function selectDay(d) {
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -3925,7 +5013,8 @@ document.addEventListener('click', e => {
 
 /* ═══ LOG SHEET ═══ */
 function openLog() {
-  goTo('lv-choice');
+  goTo('lv-voice');
+  startVoice();
   document.getElementById('log-overlay').classList.add('sheet-overlay--visible');
   document.getElementById('log-sheet').classList.add('log-sheet--open');
   // FAB becomes X
@@ -4350,29 +5439,27 @@ function closeVoiceOverlay() {
   mic.style.background = '';
 }
 
-/* ══ SHARING SHEET ══ */
+/* ══ CONNECTED APPS SUBPANEL ══ */
 function openConnects() {
-  const p = document.getElementById('page-connects');
-  p.style.display = 'flex';
-  requestAnimationFrame(() => p.classList.add('page--active'));
+  const p = document.getElementById('connects-subpanel');
+  requestAnimationFrame(() => p.classList.add('profile-subpanel--open'));
 }
 function closeConnects() {
-  const p = document.getElementById('page-connects');
-  p.classList.remove('page--active');
-  setTimeout(() => { p.style.display = 'none'; }, 300);
+  const p = document.getElementById('connects-subpanel');
+  p.classList.remove('profile-subpanel--open');
 }
 
-function openSharingSheet() {
-  document.getElementById('sharing-backdrop').style.opacity = '1';
-  document.getElementById('sharing-backdrop').style.pointerEvents = 'auto';
-  document.getElementById('sharing-sheet').classList.add('bottom-sheet--open');
+/* ══ SETTINGS SHEET ══ */
+function openSettingsSheet() {
+  document.getElementById('settings-backdrop').style.opacity = '1';
+  document.getElementById('settings-backdrop').style.pointerEvents = 'auto';
+  document.getElementById('settings-sheet').classList.add('bottom-sheet--open');
 }
-function closeSharingSheet() {
-  document.getElementById('sharing-backdrop').style.opacity = '0';
-  document.getElementById('sharing-backdrop').style.pointerEvents = 'none';
-  document.getElementById('sharing-sheet').classList.remove('bottom-sheet--open');
+function closeSettingsSheet() {
+  document.getElementById('settings-backdrop').style.opacity = '0';
+  document.getElementById('settings-backdrop').style.pointerEvents = 'none';
+  document.getElementById('settings-sheet').classList.remove('bottom-sheet--open');
 }
-function openSharedWithMe() { openSharingSheet(); }
 
 
 function openMedSheet() {
@@ -4384,6 +5471,38 @@ function closeMedSheet() {
   document.getElementById('med-backdrop').style.opacity = '0';
   document.getElementById('med-backdrop').style.pointerEvents = 'none';
   document.getElementById('med-sheet').classList.remove('bottom-sheet--open');
+}
+function toggleRemindTime(cb) {
+  document.getElementById('med-remind-time-wrap').style.display = cb.checked ? 'block' : 'none';
+}
+function toggleDailyReminder(cb) {
+  const sub = document.getElementById('mdd-reminder-sub');
+  if (sub) sub.textContent = cb.checked ? '8:00 AM' : 'Off';
+}
+function toggleTrackSupply(cb) {
+  const supplyRow = document.getElementById('mdd-supply-row');
+  const refillRow = document.getElementById('mdd-refill-row');
+  if (supplyRow) supplyRow.style.display = cb.checked ? 'flex' : 'none';
+  if (refillRow) refillRow.style.display = cb.checked ? 'flex' : 'none';
+}
+let currentSupply = 30;
+function openSupplyPicker() {
+  document.getElementById('supply-count').textContent = currentSupply;
+  document.getElementById('supply-overlay').classList.add('sheet-overlay--visible');
+  document.getElementById('supply-sheet').classList.add('bottom-sheet--open');
+}
+function closeSupplyPicker() {
+  document.getElementById('supply-overlay').classList.remove('sheet-overlay--visible');
+  document.getElementById('supply-sheet').classList.remove('bottom-sheet--open');
+}
+function changeSupply(delta) {
+  currentSupply = Math.max(0, currentSupply + delta);
+  document.getElementById('supply-count').textContent = currentSupply;
+}
+function saveSupply() {
+  const val = document.getElementById('mdd-supply-val');
+  if (val) val.textContent = currentSupply + ' pills';
+  closeSupplyPicker();
 }
 function selectFreq(el, val) {
   document.querySelectorAll('.med-freq-btn').forEach(b => b.classList.remove('med-freq-btn--active'));
@@ -4410,6 +5529,383 @@ function saveMedCourse() {
   closeMedSheet();
   document.getElementById('med-name').value = '';
   document.getElementById('med-dose').value = '';
+}
+
+/* ─── MEDICATION DETAIL ─── */
+function openMedDetail(name, dose, freq, reminderTime, taken) {
+  document.getElementById('mdd-title').textContent = name;
+  document.getElementById('mdd-name').textContent = name;
+  document.getElementById('mdd-dose').textContent = dose;
+  document.getElementById('mdd-freq').textContent = freq;
+
+  const reminderSub = document.getElementById('mdd-reminder-sub');
+  if (reminderSub) reminderSub.textContent = reminderTime;
+
+  const reminderTimeEl = document.getElementById('mdd-reminder-time');
+  if (reminderTimeEl) reminderTimeEl.textContent = 'Reminder · ' + reminderTime;
+
+  // taken badge
+  const badge = document.getElementById('mdd-taken-badge');
+  if (taken) {
+    badge.innerHTML = '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:9999px;background:rgba(52,199,89,0.12);font-size:12px;font-weight:600;color:var(--color-brand-success);">✓ Taken today</span>';
+    document.getElementById('mdd-take-wrap').style.display = 'none';
+  } else {
+    badge.innerHTML = '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:9999px;background:rgba(255,149,0,0.12);font-size:12px;font-weight:600;color:var(--color-brand-warning);">Pending</span>';
+    document.getElementById('mdd-take-wrap').style.display = 'block';
+  }
+
+  // adherence
+  const takenDays = taken ? 18 : 14;
+  const totalDays = 21;
+  const pct = Math.round((takenDays / totalDays) * 100);
+  document.getElementById('mdd-stat-sub').textContent = takenDays + ' of ' + totalDays + ' days taken';
+  document.getElementById('mdd-stat-pct').textContent = pct + '%';
+  document.getElementById('mdd-adherence-fill').style.width = pct + '%';
+  document.getElementById('mdd-adherence-fill').style.background =
+    pct >= 80 ? 'var(--color-brand-success)' : pct >= 60 ? 'var(--color-brand-warning)' : 'var(--color-brand-danger)';
+
+  renderMedCal(taken);
+  document.getElementById('med-detail').classList.add('med-detail--open');
+}
+
+function closeMedDetail() {
+  document.getElementById('med-detail').classList.remove('med-detail--open');
+}
+
+function markTakenFromDetail() {
+  document.getElementById('mdd-take-wrap').style.display = 'none';
+  document.getElementById('mdd-taken-badge').innerHTML =
+    '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:9999px;background:rgba(52,199,89,0.12);font-size:12px;font-weight:600;color:var(--color-brand-success);">✓ Taken now</span>';
+}
+
+function renderMedCal(takenToday) {
+  const grid = document.getElementById('mdd-cal-grid');
+  const days = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+  let html = days.map(d => `<div class="med-cal-day-name">${d}</div>`).join('');
+
+  // June 2024: starts on Saturday (day 6 in Mo-first = index 5)
+  const startOffset = 5;
+  for (let i = 0; i < startOffset; i++) html += '<div class="med-cal-cell"></div>';
+
+  // mock pattern: taken most days, missed a few
+  const missed = [4, 11, 18, 19];
+  const today = 23;
+
+  for (let d = 1; d <= 30; d++) {
+    let cls = 'med-cal-cell';
+    let label = d;
+    if (d === today) {
+      cls += takenToday ? ' med-cal-cell--taken' : ' med-cal-cell--today';
+    } else if (d > today) {
+      cls += ' med-cal-cell--future';
+    } else if (missed.includes(d)) {
+      cls += ' med-cal-cell--missed';
+    } else {
+      cls += ' med-cal-cell--taken';
+    }
+    html += `<div class="${cls}">${label}</div>`;
+  }
+  grid.innerHTML = html;
+}
+</script>
+
+<!-- HEALTH SCORE SHEET -->
+<div id="hs-backdrop" onclick="closeHealthScore()" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399;opacity:0;pointer-events:none;transition:opacity 0.3s;"></div>
+<div id="hs-sheet" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:390px;background:var(--color-bg-primary);border-radius:20px 20px 0 0;z-index:400;padding-bottom:env(safe-area-inset-bottom,34px);transition:transform 0.5s cubic-bezier(0,0,0.58,1);max-height:90dvh;overflow-y:auto;">
+  <div style="width:36px;height:5px;background:var(--color-separator-opaque);border-radius:9999px;margin:8px auto 12px;"></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;">
+    <button onclick="closeHealthScore()" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:none;cursor:pointer;color:var(--color-brand-primary);">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div style="font-size:17px;font-weight:600;">Health assessment</div>
+    <div style="width:44px;"></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;padding:8px 16px 16px;">
+    <div style="position:relative;width:64px;height:64px;flex-shrink:0;">
+      <svg viewBox="0 0 72 72" width="64" height="64">
+        <circle cx="36" cy="36" r="30" fill="none" stroke="var(--color-fill-primary)" stroke-width="5"/>
+        <circle cx="36" cy="36" r="30" fill="none" stroke="#007AFF" stroke-width="5" stroke-dasharray="94 94" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 36 36)"/>
+        <circle cx="36" cy="36" r="30" fill="none" stroke="#34C759" stroke-width="5" stroke-dasharray="32 156" stroke-dashoffset="-94" stroke-linecap="round" transform="rotate(-90 36 36)"/>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span style="font-size:18px;font-weight:700;color:var(--color-label-primary);">22</span></div>
+    </div>
+    <div>
+      <div style="font-size:20px;font-weight:600;color:var(--color-label-primary);">Preventive health score</div>
+      <div style="font-size:13px;color:var(--color-label-secondary);margin-top:2px;">Complete tasks to improve your score</div>
+    </div>
+  </div>
+  <div style="height:0.5px;background:var(--color-separator);margin:0 16px;"></div>
+  <!-- Prevention -->
+  <div style="padding:12px 16px 8px;font-size:15px;font-weight:600;color:var(--color-label-primary);">Prevention</div>
+  <div style="background:var(--color-bg-grouped-secondary);margin:0 16px;border-radius:12px;overflow:hidden;">
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:0.5px solid var(--color-separator);">
+      <div style="width:28px;height:28px;border-radius:14px;background:var(--color-fill-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Medical check-up <span style="color:var(--color-label-secondary);">· last 2 years</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:0.5px solid var(--color-separator);">
+      <div style="width:28px;height:28px;border-radius:14px;background:var(--color-fill-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Hepatitis C test <span style="color:var(--color-label-secondary);">· once</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:0.5px solid var(--color-separator);">
+      <div style="width:28px;height:28px;border-radius:14px;background:rgba(52,199,89,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Cholesterol test <span style="color:var(--color-label-secondary);">· last 4 years</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;">
+      <div style="width:28px;height:28px;border-radius:14px;background:rgba(52,199,89,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Glucose test <span style="color:var(--color-label-secondary);">· last 3 years</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+  <!-- Monitoring -->
+  <div style="padding:16px 16px 8px;font-size:15px;font-weight:600;color:var(--color-label-primary);">Monitoring</div>
+  <div style="background:var(--color-bg-grouped-secondary);margin:0 16px;border-radius:12px;overflow:hidden;">
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:0.5px solid var(--color-separator);">
+      <div style="width:28px;height:28px;border-radius:14px;background:rgba(52,199,89,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#34C759" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Blood pressure <span style="color:var(--color-label-secondary);">· last 30 days</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:0.5px solid var(--color-separator);">
+      <div style="width:28px;height:28px;border-radius:14px;background:var(--color-fill-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Weight <span style="color:var(--color-label-secondary);">· last 30 days</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:0.5px solid var(--color-separator);">
+      <div style="width:28px;height:28px;border-radius:14px;background:var(--color-fill-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Resting pulse <span style="color:var(--color-label-secondary);">· last 3 days</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;">
+      <div style="width:28px;height:28px;border-radius:14px;background:var(--color-fill-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Glucose <span style="color:var(--color-label-secondary);">· last 24 hours</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+  <!-- Action -->
+  <div style="padding:16px 16px 8px;font-size:15px;font-weight:600;color:var(--color-label-primary);">Action</div>
+  <div style="background:var(--color-bg-grouped-secondary);margin:0 16px;border-radius:12px;overflow:hidden;margin-bottom:32px;">
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;border-bottom:0.5px solid var(--color-separator);">
+      <div style="width:28px;height:28px;border-radius:14px;background:var(--color-fill-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Log a symptom <span style="color:var(--color-label-secondary);">· not done</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+    <div style="display:flex;align-items:center;padding:12px 16px;gap:12px;">
+      <div style="width:28px;height:28px;border-radius:14px;background:var(--color-fill-tertiary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      <div style="flex:1;font-size:15px;color:var(--color-label-primary);">Upload a document <span style="color:var(--color-label-secondary);">· not done</span></div>
+      <svg viewBox="0 0 24 24" width="8" height="13" fill="none" stroke="var(--color-label-tertiary)" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+</div>
+
+<script>
+function openHealthScore() {
+  const bd = document.getElementById('hs-backdrop');
+  const sh = document.getElementById('hs-sheet');
+  bd.style.display = 'block';
+  bd.style.pointerEvents = 'auto';
+  requestAnimationFrame(() => { bd.style.opacity = '1'; sh.style.transform = 'translateX(-50%) translateY(0)'; });
+}
+function closeHealthScore() {
+  const bd = document.getElementById('hs-backdrop');
+  const sh = document.getElementById('hs-sheet');
+  bd.style.opacity = '0';
+  bd.style.pointerEvents = 'none';
+  sh.style.transform = 'translateX(-50%) translateY(100%)';
+  setTimeout(() => { bd.style.display = 'none'; }, 300);
+}
+</script>
+
+<!-- BIOMARKERS DETAIL SHEET -->
+<div id="bio-backdrop" onclick="closeBiomarkers()" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:399;opacity:0;pointer-events:none;transition:opacity 0.3s;display:none;"></div>
+<div id="bio-sheet" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:390px;background:var(--color-bg-grouped-primary);border-radius:20px 20px 0 0;z-index:400;padding-bottom:env(safe-area-inset-bottom,34px);transition:transform 0.5s cubic-bezier(0,0,0.58,1);max-height:92dvh;overflow-y:auto;">
+
+  <!-- Nav -->
+  <div style="position:sticky;top:0;background:rgba(242,242,247,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--color-separator);z-index:1;">
+    <div style="width:36px;height:5px;background:var(--color-separator-opaque);border-radius:9999px;margin:8px auto 0;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px 10px;">
+      <button onclick="closeBiomarkers()" style="display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;color:var(--color-brand-primary);font-size:17px;font-weight:400;">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Health
+      </button>
+      <div style="font-size:17px;font-weight:600;color:var(--color-label-primary);">Biomarkers</div>
+      <div style="display:flex;gap:8px;">
+        <button style="background:none;border:none;cursor:pointer;color:var(--color-brand-primary);">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <button style="background:none;border:none;cursor:pointer;color:var(--color-brand-primary);">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Segment -->
+    <div style="display:flex;gap:0;margin:0 16px 10px;background:var(--color-fill-tertiary);border-radius:9px;padding:2px;">
+      <button onclick="setBioTab('trends',this)" style="flex:1;padding:6px 0;border:none;border-radius:7px;background:#fff;font-size:13px;font-weight:600;color:var(--color-label-primary);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.12);">Trends</button>
+      <button onclick="setBioTab('reports',this)" style="flex:1;padding:6px 0;border:none;border-radius:7px;background:transparent;font-size:13px;font-weight:500;color:var(--color-label-secondary);cursor:pointer;">Reports</button>
+    </div>
+  </div>
+
+  <div style="padding:12px 16px 32px;">
+
+    <!-- Heart Health -->
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 0 8px;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FF2D55" stroke-width="1.8" stroke-linecap="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+      <span style="font-size:15px;font-weight:600;color:var(--color-label-primary);">Heart health</span>
+    </div>
+    <div style="background:var(--color-bg-grouped-secondary);border-radius:12px;overflow:hidden;">
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--color-separator);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:15px;color:var(--color-label-primary);">Total cholesterol</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">42</span>
+            <span style="font-size:12px;color:#34C759;font-weight:500;">Normal</span>
+          </div>
+        </div>
+        <div style="height:4px;background:linear-gradient(to right,#34C759 0%,#34C759 40%,#FF9500 40%,#FF9500 70%,#FF3B30 70%,#FF3B30 100%);border-radius:2px;position:relative;">
+          <div style="position:absolute;top:-3px;left:35%;width:10px;height:10px;border-radius:50%;background:#34C759;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--color-separator);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:15px;color:var(--color-label-primary);">HDL cholesterol</span>
+          <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">32</span>
+        </div>
+        <div style="height:4px;background:linear-gradient(to right,#34C759 0%,#34C759 40%,#FF9500 40%,#FF9500 70%,#FF3B30 70%,#FF3B30 100%);border-radius:2px;position:relative;">
+          <div style="position:absolute;top:-3px;left:28%;width:10px;height:10px;border-radius:50%;background:#34C759;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--color-separator);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:15px;color:var(--color-label-primary);">LDL cholesterol</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">23</span>
+            <span style="font-size:12px;color:#34C759;font-weight:500;">Optimal</span>
+          </div>
+        </div>
+        <div style="height:4px;background:linear-gradient(to right,#34C759 0%,#34C759 40%,#FF9500 40%,#FF9500 70%,#FF3B30 70%,#FF3B30 100%);border-radius:2px;position:relative;">
+          <div style="position:absolute;top:-3px;left:20%;width:10px;height:10px;border-radius:50%;background:#34C759;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--color-separator);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:15px;color:var(--color-label-primary);">Triglycerides</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">23</span>
+            <span style="font-size:12px;color:#34C759;font-weight:500;">Optimal</span>
+          </div>
+        </div>
+        <div style="height:4px;background:linear-gradient(to right,#34C759 0%,#34C759 40%,#FF9500 40%,#FF9500 70%,#FF3B30 70%,#FF3B30 100%);border-radius:2px;position:relative;">
+          <div style="position:absolute;top:-3px;left:18%;width:10px;height:10px;border-radius:50%;background:#34C759;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:15px;color:var(--color-label-primary);">Blood Pressure</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">127/129</span>
+            <span style="font-size:12px;color:#FF3B30;font-weight:500;">Stage 2</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kidney -->
+    <div style="display:flex;align-items:center;gap:10px;padding:16px 0 8px;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#FF9500" stroke-width="1.8" stroke-linecap="round"><path d="M12 2C8 2 5 5 5 9c0 3 1.5 5.5 3 7.5S12 22 12 22s2.5-3.5 4-5.5S19 12 19 9c0-4-3-7-7-7z"/><path d="M12 2c-2 3-3 6-3 9s1 6 3 9"/></svg>
+      <span style="font-size:15px;font-weight:600;color:var(--color-label-primary);">Kidney function</span>
+    </div>
+    <div style="background:var(--color-bg-grouped-secondary);border-radius:12px;overflow:hidden;">
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--color-separator);">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:15px;color:var(--color-label-primary);">eGFR</span>
+          <span style="font-size:13px;color:var(--color-label-tertiary);">no data</span>
+        </div>
+      </div>
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--color-separator);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:15px;color:var(--color-label-primary);">Creatinine</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">88</span>
+            <span style="font-size:12px;color:#34C759;font-weight:500;">Normal</span>
+          </div>
+        </div>
+        <div style="height:4px;background:linear-gradient(to right,#34C759 0%,#34C759 40%,#FF9500 40%,#FF9500 70%,#FF3B30 70%,#FF3B30 100%);border-radius:2px;position:relative;">
+          <div style="position:absolute;top:-3px;left:33%;width:10px;height:10px;border-radius:50%;background:#34C759;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:15px;color:var(--color-label-primary);">Uric acid</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">310</span>
+            <span style="font-size:12px;color:#34C759;font-weight:500;">Normal</span>
+          </div>
+        </div>
+        <div style="height:4px;background:linear-gradient(to right,#34C759 0%,#34C759 40%,#FF9500 40%,#FF9500 70%,#FF3B30 70%,#FF3B30 100%);border-radius:2px;position:relative;">
+          <div style="position:absolute;top:-3px;left:38%;width:10px;height:10px;border-radius:50%;background:#34C759;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Metabolism -->
+    <div style="display:flex;align-items:center;gap:10px;padding:16px 0 8px;">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#AF52DE" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="7" width="7" height="7" rx="1"/><rect x="15" y="7" width="7" height="7" rx="1"/><rect x="8.5" y="10" width="7" height="7" rx="1"/></svg>
+      <span style="font-size:15px;font-weight:600;color:var(--color-label-primary);">Metabolism</span>
+    </div>
+    <div style="background:var(--color-bg-grouped-secondary);border-radius:12px;overflow:hidden;">
+      <div style="padding:12px 16px;border-bottom:0.5px solid var(--color-separator);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:15px;color:var(--color-label-primary);">Glucose</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">6.8</span>
+            <span style="font-size:12px;color:#FF3B30;font-weight:500;">High</span>
+          </div>
+        </div>
+        <div style="height:4px;background:linear-gradient(to right,#34C759 0%,#34C759 40%,#FF9500 40%,#FF9500 70%,#FF3B30 70%,#FF3B30 100%);border-radius:2px;position:relative;">
+          <div style="position:absolute;top:-3px;left:72%;width:10px;height:10px;border-radius:50%;background:#FF3B30;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span style="font-size:15px;color:var(--color-label-primary);">HbA1c</span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:15px;font-weight:500;color:var(--color-label-primary);">7.2</span>
+            <span style="font-size:12px;color:#FF9500;font-weight:500;">Elevated</span>
+          </div>
+        </div>
+        <div style="height:4px;background:linear-gradient(to right,#34C759 0%,#34C759 40%,#FF9500 40%,#FF9500 70%,#FF3B30 70%,#FF3B30 100%);border-radius:2px;position:relative;">
+          <div style="position:absolute;top:-3px;left:55%;width:10px;height:10px;border-radius:50%;background:#FF9500;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function openBiomarkers() {
+  const bd = document.getElementById('bio-backdrop');
+  const sh = document.getElementById('bio-sheet');
+  bd.style.display = 'block';
+  bd.style.pointerEvents = 'auto';
+  requestAnimationFrame(() => { bd.style.opacity = '1'; sh.style.transform = 'translateX(-50%) translateY(0)'; });
+}
+function closeBiomarkers() {
+  const bd = document.getElementById('bio-backdrop');
+  const sh = document.getElementById('bio-sheet');
+  bd.style.opacity = '0';
+  bd.style.pointerEvents = 'none';
+  sh.style.transform = 'translateX(-50%) translateY(100%)';
+  setTimeout(() => { bd.style.display = 'none'; }, 300);
+}
+function setBioTab(tab, btn) {
+  const btns = document.querySelectorAll('#bio-sheet button[onclick^="setBioTab"]');
+  btns.forEach(b => { b.style.background = 'transparent'; b.style.color = 'var(--color-label-secondary)'; b.style.fontWeight = '500'; b.style.boxShadow = 'none'; });
+  btn.style.background = '#fff';
+  btn.style.color = 'var(--color-label-primary)';
+  btn.style.fontWeight = '600';
+  btn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12)';
 }
 </script>
 </body>
